@@ -10,7 +10,7 @@ entity uc is
 end uc;
 
 architecture behavior of uc is
-    type state is (idle, add_, sub_, and_, or_, not_ cmp_, jmp_, jeq_, jgr_, load_, store_, mov_, in_, out_, wait_, imm);
+    type state is (dec, add_, sub_, and_, or_, not_ cmp_, jmp_, jeq_, jgr_, load_, store_, mov_, in_, out_, wait_, imm);
     signal cur_state: state := idle;
     signal next_state: state;
     signal mem_read: std_logic;-- Leitura de memória
@@ -33,10 +33,10 @@ architecture behavior of uc is
 
 
 begin
-    process(inst, state)
+    process(dec, state)
     begin
         case(state) is
-            when idle =>
+            when dec =>
                 case(inst(7 downto 4)) is
                     when "0000" =>
                         next_state <= add_;
@@ -69,13 +69,32 @@ begin
                     when "1110" =>
                         next_state <= wait_;
                     when (others) =>
-                        next_state <= idle;
+                        next_state <= dec;
                 end case;
 
             when add_ =>
+                mem_en <= '0';
+                in_en <= '0';
+                out_en <= '0';
                 alu_src1 <= inst(3 downto 2);
                 alu_src2 <= inst(1 downto 0);
                 aluop <= "000";
+                load_reg_a <= '0';
+                load_reg_b <= '0';
+                load_reg_pc <= '0';
+                reg_src_a <= '0';
+                reg_src_b <= '0';
+                out_src <= '0';
+                jump_c <= '0';
+                jump <= '0';
+                if(inst(1 downto 0) = "11") then
+                    next_state <= imm;
+                    load_reg_inst <= '1';
+                else
+                    next_state <= dec;
+                    load_reg_inst <= '0';
+                end if;
+
 
 
                     
