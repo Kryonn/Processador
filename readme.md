@@ -10,6 +10,9 @@ entity uc is
 end uc;
 
 architecture behavior of uc is
+    type state is (idle, add_, sub_, and_, or_, not_ cmp_, jmp_, jeq_, jgr_, load_, store_, mov_, in_, out_, wait_, imm);
+    signal cur_state: state := idle;
+    signal next_state: state;
     signal mem_read: std_logic;-- Leitura de memória
     signal mem_write: std_logic;-- Escrita na memória
     signal mem_en: std_logic;-- Hablitar a memória para ações
@@ -30,11 +33,53 @@ architecture behavior of uc is
 
 
 begin
-    process(inst)
+    process(inst, state)
     begin
-        case (inst(7 downto 4)) is
-            when "0000" => 
-                control
+        case(state) is
+            when idle =>
+                case(inst(7 downto 4)) is
+                    when "0000" =>
+                        next_state <= add_;
+                    when "0001" =>
+                        next_state <= sub_;
+                    when "0010" =>
+                        next_state <= and_;
+                    when "0011" =>
+                        next_state <= or_;
+                    when "0100" =>
+                        next_state <= not_;
+                    when "0101" =>
+                        next_state <= cmp_;
+                    when "0110" =>
+                        next_state <= jmp_;
+                    when "0111" =>
+                        next_state <= jeq_;
+                    when "1000" =>
+                        next_state <= jgr_;
+                    when "1001" =>
+                        next_state <= load_;
+                    when "1010" =>
+                        next_state <= store_;
+                    when "1011" =>
+                        next_state <= mov_;
+                    when "1100" =>
+                        next_state <= in_;
+                    when "1101" =>
+                        next_state <= out_;
+                    when "1110" =>
+                        next_state <= wait_;
+                    when (others) =>
+                        next_state <= idle;
+                end case;
+
+            when add_ =>
+                alu_src1 <= inst(3 downto 2);
+                alu_src2 <= inst(1 downto 0);
+                aluop <= "000";
+
+
+                    
+
     end process;
 end behavior;
 ```
