@@ -126,47 +126,115 @@ end ula;
 architecture behavior of ula is
 begin
     process(A, B, aluop)
-    variable temp: signed(8 downto 0);  -- Usar uma variável temporária para overflow
+        variable temp: signed(8 downto 0);  -- Variável para capturar overflow e carry
     begin
         case aluop is
             when "000" =>  -- Adição
-                temp := signed(A) + signed(B);
-                C <= std_logic_vector(temp(7 downto 0));
+                temp := signed('0' & A) + signed('0' & B);
                 carry <= temp(8);
+                C <= std_logic_vector(temp(7 downto 0));
+                overflow <= (A(7) = B(7)) and (C(7) /= A(7));
+                
             when "001" =>  -- Subtração
-                temp := signed(A) - signed(B);
-                C <= std_logic_vector(temp(7 downto 0));
+                temp := signed('0' & A) - signed('0' & B);
                 carry <= temp(8);
+                C <= std_logic_vector(temp(7 downto 0));
+                overflow <= (A(7) /= B(7)) and (C(7) /= A(7));
+                
             when "010" =>  -- AND
                 C <= A and B;
-                carry <= '0';  -- Não aplica
+                carry <= '0';
+                overflow <= '0';
+
             when "011" =>  -- OR
                 C <= A or B;
-                carry <= '0';  -- Não aplica
+                carry <= '0';
+                overflow <= '0';
+
             when "100" =>  -- NOT A
                 C <= not A;
-                carry <= '0';  -- Não aplica
-            when "101" =>  -- Comparação
-                temp := signed(A) - signed(B);
-                if(temp > 0) then
-                    C <= "00000001"; -- A > B
-                else
-                    if(temp = 0) then
-                        C <= "00000010"; -- A = B
-                    else
-                        C <= "00000100"; -- A < B
-                    end if;
-                end if;
-                carry <= '0';  -- Não aplica
+                carry <= '0';
+                overflow <= '0';
+
             when others =>
                 C <= (others => '0');
                 carry <= '0';
+                overflow <= '0';
         end case;
 
-        -- Cálculo de overflow
-        overflow <= (A(7) = B(7)) and (C(7) /= A(7));
         sinal <= C(7);
         zero <= (C = "00000000");
+    end process;
+end behavior;
+```
+
+PC Reg
+
+```VHDL
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity pc_reg is
+    port(add_in: in std_logic_vector(7 downto 0);
+    enable, rst: in std_logic;
+      load, clk: in std_logic;
+        add_out: out std_logic_vector(7 downto 0));
+end pc_reg;
+
+architecture behavior of pc_reg is
+
+begin
+    process(clk, rst, add_in)
+    begin
+        if(rst = '1') then
+            add_out <= (others => '0');
+        else
+            if(enable = '1') then
+                if(rising_edge(clk)) then
+                    if(load = '1') then
+                        add_out <= add_in;
+                    else
+                        add_out <= std_logic_vector(unsigned(add_out)+1);
+                    end if;
+                end if;
+            end if;
+        end if;
+    end process;
+end behavior;
+```
+
+Reg
+
+
+```VHDL
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity pc_reg is
+    port(add_in: in std_logic_vector(7 downto 0);
+    enable, rst: in std_logic;
+      load, clk: in std_logic;
+        add_out: out std_logic_vector(7 downto 0));
+end pc_reg;
+
+architecture behavior of pc_reg is
+
+begin
+    process(clk, rst, add_in)
+    begin
+        if(rst = '1') then
+            add_out <= (others => '0');
+        else
+            if(enable = '1') then
+                if(rising_edge(clk)) then
+                    if(load = '1') then
+                        add_out <= add_in;
+                    else
+                        add_out <= std_logic_vector(unsigned(add_out)+1);
+                    end if;
+                end if;
+            end if;
+        end if;
     end process;
 end behavior;
 ```
