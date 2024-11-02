@@ -276,31 +276,28 @@ Reg
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity pc_reg is
-    port(add_in: in std_logic_vector(7 downto 0);
-    enable, rst: in std_logic;
-      load, clk: in std_logic;
-        add_out: out std_logic_vector(7 downto 0));
-end pc_reg;
+entity reg is
+    port(
+        data_in: in std_logic_vector(7 downto 0);
+        rst: in std_logic;      -- Ativo em '0' para reset
+        load: in std_logic;     -- Ativo em '0' para carregar os dados
+        data_out: out std_logic_vector(7 downto 0)
+    );
+end reg;
 
-architecture behavior of pc_reg is
+architecture behavior of reg is
+    signal temp: std_logic_vector(7 downto 0) := (others => '0');
 
 begin
-    process(clk, rst, add_in)
+    process(rst, load)  -- Sensibilidade aos sinais que controlam a lógica
     begin
-        if(rst = '1') then
-            add_out <= (others => '0');
-        else
-            if(enable = '1') then
-                if(rising_edge(clk)) then
-                    if(load = '1') then
-                        add_out <= add_in;
-                    else
-                        add_out <= std_logic_vector(unsigned(add_out)+1);
-                    end if;
-                end if;
-            end if;
+        if rst = '0' then
+            temp <= (others => '0');  -- Reset do registrador quando rst é 0
+        elsif load = '0' then
+            temp <= data_in;  -- Carregando dados no registrador quando load é 0
         end if;
     end process;
+
+    data_out <= temp;  -- Saída do registrador
 end behavior;
 ```
