@@ -1,3 +1,69 @@
+```VHDL
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity processador is
+    port(sw: in std_logic_vector(7 downto 0);
+        clk: in std_logic;
+        led: out std_logic_vector(7 downto 0)); 
+end processador;
+
+architecture vamos_reprovar of processador is
+    signal address_bus: std_logic_vector(7 downto 0);
+    signal mem_out: std_logic_vector(7 downto 0);
+    -- Sinais: load_pc/mem_src1/mem_read/mem_write/mem_en/
+    --         load_ir/mem_src2(1-0)/a_src(1-0)/b_src(1-0)/in/load_a/load_b/alu_src1(1-0)/
+    --         alu_src2(1-0)/aluop(2-0)/r_src(1-0)/load_r/out_src/load_out
+    signal search_control: std_logic_vector(5 downto 0);
+    signal control_bus: std_logic_vector(26 downto 0);
+    signal rst: std_logic;
+    signal exec: std_logic := '0';
+    signal pc: std_logic_vector(7 downto 0);
+    type state is (ini, busca, in_pc, exec);
+    signal cur_state: state := ini;
+    signal next_state: state;
+
+begin
+    process(clk, sw)
+    begin
+        case(state) is
+            when ini =>
+                exec <= '0';
+                busca <= '0';
+                rst <= '1';
+                search_bus <= "0_0_0_0_0_0";
+                next_state <= busca;
+            when busca =>
+                rst <= '0';
+                search_bus <= "0_0_1_0_1_1";
+                next_state <= inc_pc;
+            when inc_pc =>
+                search_bus <= "1_0_0_0_1_0";
+                next_state <= exec;
+            when exec => 
+                search_bus <= "0_0_0_0_1_0";
+                exec <= '1';
+                if(busca = '1') then
+                    next_state <= busca;
+                else
+                    next_state <= exec;
+                end if;
+        end case;
+    end process;
+
+    
+
+
+            
+            
+
+
+
+
+    end process;
+    
+end vamos_reprovar;
+```
 Unidade de controle
 
 ```VHDL
