@@ -291,9 +291,9 @@ architecture behavior of reg is
 begin
     process(rst, load)  -- Sensibilidade aos sinais que controlam a lógica
     begin
-        if rst = '0' then
+        if rst = '1' then
             temp <= (others => '0');  -- Reset do registrador quando rst é 0
-        elsif load = '0' then
+        elsif load = '1' then
             temp <= data_in;  -- Carregando dados no registrador quando load é 0
         end if;
     end process;
