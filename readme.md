@@ -241,31 +241,30 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity pc_reg is
-    port(add_in: in std_logic_vector(7 downto 0);
-    enable, rst: in std_logic;
-      load, clk: in std_logic;
-        add_out: out std_logic_vector(7 downto 0));
+    port(
+        data_in: in std_logic_vector(7 downto 0);
+        rst, clk: in std_logic;
+        load: in std_logic;
+        data_out: out std_logic_vector(7 downto 0)
+    );
 end pc_reg;
 
 architecture behavior of pc_reg is
+    signal temp: std_logic_vector(7 downto 0) := (others => '0');
 
 begin
-    process(clk, rst, add_in)
+    process(rst, load, clk)
     begin
-        if(rst = '1') then
-            add_out <= (others => '0');
-        else
-            if(enable = '1') then
-                if(rising_edge(clk)) then
-                    if(load = '1') then
-                        add_out <= add_in;
-                    else
-                        add_out <= std_logic_vector(unsigned(add_out)+1);
-                    end if;
-                end if;
-            end if;
+        if rst = '1' then
+            temp <= (others => '0');
+        elsif load = '1' then
+				if(rising_edge(clk)) then
+					temp <= data_in;
+				end if;
         end if;
     end process;
+
+    data_out <= temp;
 end behavior;
 ```
 
