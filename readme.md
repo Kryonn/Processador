@@ -72,35 +72,65 @@ use ieee.std_logic_1164.all;
 
 entity uc is
     port(inst: in std_logic_vector(7 downto 0);
-  control_bus: out std_logic_vector(4 downto 0));-- 0:mem_read/1:mem_write/2:mem_en/3:in_en/4:out_en/5-7:aluop
+	 clk, exec: in std_logic;
+		  busca: out std_logic;
+  control_bus: out std_logic_vector(32 downto 0));
 end uc;
 
 architecture behavior of uc is
-    type state is (dec, add_, sub_, and_, or_, not_ cmp_, jmp_, jeq_, jgr_, load_, store_, mov_, in_, out_, wait_, imm);
+    type state is (dec, add_, add_1, add_imm_A, add_imm_B, add_imm_R, add_imm, sub_, and_, or_, not_ cmp_, jmp_, jeq_, jgr_, load_, store_, mov_, in_, out_, wait_);
     signal cur_state: state := idle;
     signal next_state: state;
-    signal mem_read: std_logic;-- Leitura de memória
-    signal mem_write: std_logic;-- Escrita na memória
-    signal mem_en: std_logic;-- Hablitar a memória para ações
-    signal in_en: std_logic;-- Passagem dos inputs
-    signal out_en: std_logic;-- Passagem do outputs
-    signal aluop: std_logic(2 downto 0);-- Operação que será feita na ula 
-    signal alu_src1: std_logic(1 downto 0);-- Origem da primeira entrada da ula
-    signal alu_src2: std_logic(1 downto 0);-- Origem da segunda entrada da ula
-    signal load_reg_a: std_logic;-- Carrega valores no reg A 
-    signal load_reg_b: std_logic;-- Carrega valores no reg B
-    signal load_pc: std_logic;
-    signal load_reg_inst: std_logic;
-    signal reg_src_a: std_logic(1 downto 0);-- Origem dos valores de entrada do reg A
-    signal reg_src_b: std_logic(1 downto 0);-- Origem dos valores de entrada do reg B
-    signal out_src: std_logic(1 downto 0);-- Origem dos valores de saída
-    signal jump_c: std_logic;-- Sinal para mudança do pc
-    signal jump: std_logic;-- Sinal para mudança do pc
-
-
+	 signal load_pc: std_logic;
+    signal mem_read: std_logic;
+    signal mem_write: std_logic;
+    signal mem_en: std_logic;
+	 signal mem_src1: std_logic(2 downto 0);
+	 signal mem_src2: std_logic(1 downto 0);
+    signal load_ir: std_logic;
+	 signal A_src: std_logic_vector(1 downto 0);
+	 signal B_src: std_logic_vector(1 downto 0);
+	 signal in_en: std_logic;
+	 signal load_A: std_logic;
+	 signal load_B: std_logic;
+	 signal alu_src1: std_logic_vector(1 downto 0);
+	 signal alu_src2: std_logic_vector(1 downto 0);
+	 signal aluop: std_logic_vector(2 downto 0);
+	 signal R_src: std_logic_vector(1 downto 0);
+	 signal load_r: std_logic;
+	 signal out_src: std_logic_vector(1 downto 0);
+	 signal load_out: std_logic;
+	 signal jmp: std_logic;
+	 signal jeq: std_logic;
+	 signal jgr: std_logic;
+	 
 begin
-    process(dec, state)
+    process
     begin
+	 if(exec = '1') then
+		  busca <= '0';
+		  load_pc <= '0';
+		  mem_read <= '0';
+		  mem_write <= '0';
+		  mem_en <= '1';
+		  mem_src1 <= "000"
+		  mem_src2 <= "00"
+		  load_ir <= '0';
+		  A_src <= "00";
+		  B_src <= "00";
+		  in_en <= '0';
+		  load_A <= '0';
+		  load_B <= '0';
+		  alu_src1 <= "00";
+		  alu_src2 <= "00";
+		  aluop <= "000";
+		  R_src <= "00";
+		  load_r <= '0';
+		  out_src <= "00";
+		  load_out <= '0';
+		  jmp <= '0';
+		  jeq <= '0';
+		  jgr <= '0';
         case(state) is
             when dec =>
                 case(inst(7 downto 4)) is
@@ -139,33 +169,82 @@ begin
                 end case;
 
             when add_ =>
-                mem_en <= '0';
-                in_en <= '0';
-                out_en <= '0';
-                alu_src1 <= inst(3 downto 2);
-                alu_src2 <= inst(1 downto 0);
-                aluop <= "000";
-                load_reg_a <= '0';
-                load_reg_b <= '0';
-                load_reg_pc <= '0';
-                reg_src_a <= '0';
-                reg_src_b <= '0';
-                out_src <= '0';
-                jump_c <= '0';
-                jump <= '0';
-                if(inst(1 downto 0) = "11") then
-                    next_state <= imm;
-                    load_reg_inst <= '1';
-                else
-                    next_state <= dec;
-                    load_reg_inst <= '0';
-                end if;
-
-
-
-                    
-
+					case(inst(1 downto 0)) is
+						when "11" =>
+							case(inst(3 downto 2)) is
+								when "00" =>
+									next_state <= add_imm_A;
+								when "01" =>
+									next_state <= add_imm_B;
+								when "10" =>
+									next_state <= add_imm_R;
+								when others =>
+									next_state <= dec;
+							end case;
+						when others =>
+							next_state <= add_1;
+					end case;
+						
+				when add_1 =>
+					load_pc <= '0';
+					mem_read <= '0';
+					mem_write <= '0';
+					mem_en <= '1';
+					mem_src1 <= "000"
+					mem_src2 <= "00"
+					load_ir <= '0';
+					A_src <= "00";
+					B_src <= "00";
+					in_en <= '0';
+					load_A <= '0';
+					load_B <= '0';
+					alu_src1 <= inst(3 downto 2);
+					alu_src2 <= inst(1 downto 0);
+					aluop <= "000";
+					R_src <= "00";
+					load_r <= '1';
+					out_src <= "00";
+					load_out <= '0';
+					jmp <= '0';
+					jeq <= '0';
+					jgr <= '0';
+					next_state <= dec;
+					busca <= '1';
+					
+				when add_imm_A =>
+					load_pc <= '1';
+					mem_read <= '1';
+					mem_write <= '0';
+					mem_en <= '1';
+					mem_src1 <= "000"
+					mem_src2 <= "00"
+					load_ir <= '0';
+					A_src <= "00";
+					B_src <= "00";
+					in_en <= '0';
+					load_A <= '0';
+					load_B <= '0';
+					alu_src1 <= "00";
+					alu_src2 <= "11";
+					aluop <= "000";
+					R_src <= "00";
+					load_r <= '1';
+					out_src <= "00";
+					load_out <= '0';
+					jmp <= '0';
+					jeq <= '0';
+					jgr <= '0';
+					next_state <= dec;
+					busca <= '1';
+					
+	 else
+		next_state <= dec;
+    end if;
     end process;
+	 
+	 control_bus <= load_pc & mem_read & mem_write & mem_en & mem_src1 & mem_src2 & 
+						 load_ir & A_src & B_src & in_en & load_A & load_B & alu_src1 & alu_src2 & 
+						 aluop & R_src & load_R & out_src & load_out & jmp & jeq & jgr;
 end behavior;
 ```
 
