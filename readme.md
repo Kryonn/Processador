@@ -1,3 +1,29 @@
+Sinais de controle
+```VHDL
+load_pc <=
+mem_read <=
+mem_write <=
+mem_en <=
+mem_src1 <=
+mem_src2 <=
+load_ir <=
+A_src <=
+B_src <=
+in_en <=
+load_A <=
+load_B <=
+alu_src1 <=
+alu_src2 <=
+aluop <=
+R_src <=
+load_r <=
+out_src <=
+load_out <=
+jmp <=
+jeq <=
+jgr <=
+```
+
 ```VHDL
 library ieee;
 use ieee.std_logic_1164.all;
