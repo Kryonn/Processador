@@ -1,3 +1,14 @@
+Estados
+
+* Ini: zera os registradores
+* Busca: leitura da memória e escrita no IR
+* Dec: decodificação de instrução
+* R-type: execução das instruções add, sub, or e and.
+  * R_dec, R_exec, R_exec_imm
+* Not: execução da instrução not
+* ...
+* Pc: atualização do pc 
+
 Sinais de controle
 ```VHDL
 load_pc <=
