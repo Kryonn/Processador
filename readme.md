@@ -395,6 +395,69 @@ begin
 end behavior;
 ```
 
+```VHDL
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity ula is
+    port(
+        A: in std_logic_vector(7 downto 0);
+        B: in std_logic_vector(7 downto 0);
+        aluop: in std_logic_vector(2 downto 0);
+        C: out std_logic_vector(7 downto 0);
+        overflow: out std_logic;
+        sinal: out std_logic;
+        zero: out std_logic;
+        carry: out std_logic
+    );
+end ula;
+
+architecture behavior of ula is
+begin
+    process(A, B, aluop)
+        variable temp: signed(8 downto 0);  -- Variável para capturar overflow e carry
+    begin
+        case aluop is
+            when "000" =>  -- Adição
+                temp := signed('0' & A) + signed('0' & B);
+                carry <= temp(8);
+                C <= std_logic_vector(temp(7 downto 0));
+                overflow <= (A(7) = B(7)) and (C(7) /= A(7));
+                
+            when "001" =>  -- Subtração
+                temp := signed('0' & A) - signed('0' & B);
+                carry <= temp(8);
+                C <= std_logic_vector(temp(7 downto 0));
+                overflow <= (A(7) /= B(7)) and (C(7) /= A(7));
+                
+            when "010" =>  -- AND
+                C <= A and B;
+                carry <= '0';
+                overflow <= '0';
+
+            when "011" =>  -- OR
+                C <= A or B;
+                carry <= '0';
+                overflow <= '0';
+
+            when "100" =>  -- NOT A
+                C <= not A;
+                carry <= '0';
+                overflow <= '0';
+
+            when others =>
+                C <= (others => '0');
+                carry <= '0';
+                overflow <= '0';
+        end case;
+
+        sinal <= C(7);
+        zero <= (C = "00000000");
+    end process;
+end behavior;
+```
+
 PC Reg
 
 ```VHDL
