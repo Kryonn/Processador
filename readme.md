@@ -351,22 +351,32 @@ entity ula is
 end ula;
 
 architecture behavior of ula is
+	
+	signal temp: std_logic_vector(8 downto 0);
+	
 begin
     process(A, B, aluop)
-        variable temp: signed(8 downto 0);  -- Variável para capturar overflow e carry
     begin
         case aluop is
             when "000" =>  -- Adição
-                temp := signed('0' & A) + signed('0' & B);
+                temp <= std_logic_vector(signed('0' & A) + signed('0' & B));
                 carry <= temp(8);
-                C <= std_logic_vector(temp(7 downto 0));
-                overflow <= (A(7) = B(7)) and (C(7) /= A(7));
+                C <= temp(7 downto 0);
+					 if((A(7) = B(7)) and (temp(7) /= A(7))) then
+						overflow <= '1';
+					 else
+						overflow <= '0';
+					 end if;
                 
             when "001" =>  -- Subtração
-                temp := signed('0' & A) - signed('0' & B);
+                temp <= std_logic_vector(signed('0' & A) - signed('0' & B));
                 carry <= temp(8);
-                C <= std_logic_vector(temp(7 downto 0));
-                overflow <= (A(7) /= B(7)) and (C(7) /= A(7));
+                C <= temp(7 downto 0);
+					 if((A(7) /= B(7)) and (temp(7) /= A(7))) then
+						overflow <= '1';
+					 else
+						overflow <= '0';
+					 end if;
                 
             when "010" =>  -- AND
                 C <= A and B;
@@ -389,9 +399,14 @@ begin
                 overflow <= '0';
         end case;
 
-        sinal <= C(7);
-        zero <= (C = "00000000");
+        sinal <= temp(7);
+		  if(temp(7 downto 0) = "00000000") then
+				zero <= '1';
+		  else
+				zero <= '0';
+        end if;
     end process;
+
 end behavior;
 ```
 
