@@ -1,3 +1,25 @@
+Códigos da instruções
+
+|Opcode|Instrução|
+|:--:|:--:|
+|0000|ADD|
+|0001|SUB|
+|0010|AND|
+|0011|OR|
+|0100|NOT|
+|0101|CMP|
+|0110|JMP|
+|0111|JEQ|
+|1000|JGR|
+|1001|LOAD|
+|1010|STORE|
+|1011|MOV|
+|1100|IN|
+|1101|OUT|
+|1110|WAIT|
+
+
+
 Estados
 
 * Ini: zera os registradores
