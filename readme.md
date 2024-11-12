@@ -359,34 +359,34 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity ulatest is
+entity ula is
     port(
-        A: in std_logic_vector(3 downto 0);
-        B: in std_logic_vector(3 downto 0);
+        A: in std_logic_vector(7 downto 0);
+        B: in std_logic_vector(7 downto 0);
         aluop: in std_logic_vector(2 downto 0);
-        C: out std_logic_vector(3 downto 0);
+        C: out std_logic_vector(7 downto 0);
         overflow: out std_logic;
         sinal: out std_logic;
         zero: out std_logic;
         carry: out std_logic
     );
-end ulatest;
+end ula;
 
-architecture behavior of ulatest is
+architecture behavior of ula is
 	
-	signal temp1, temp2: std_logic_vector(4 downto 0);
+	signal temp1, temp2: std_logic_vector(8 downto 0);
 	signal carry1, carry2: std_logic;
 	
 begin
     process(A, B, aluop)
     begin
         case aluop is
-            when "100" =>  -- Adição
+            when "000" =>  -- Adição
                 temp1 <= std_logic_vector(signed('0' & A) + signed('0' & B));
-					 temp2 <= std_logic_vector(signed("00" & A(2 downto 0))+signed("00" & B(2 downto 0)));
-                carry1 <= temp1(4);
-					 carry2 <= temp2(3);
-                C <= temp1(3 downto 0);
+					 temp2 <= std_logic_vector(signed("00" & A(6 downto 0))+signed("00" & B(6 downto 0)));
+                carry1 <= temp1(8);
+					 carry2 <= temp2(7);
+                C <= temp1(7 downto 0);
 					 carry <= carry1;
 					 if(carry1 /= carry2) then
 						overflow <= '1';
@@ -394,12 +394,12 @@ begin
 						overflow <= '0';
 					 end if;
                 
-            when "101" =>  -- Subtração
+            when "001" =>  -- Subtração
                 temp1 <= std_logic_vector(signed('0' & A) - signed('0' & B));
-					 temp2 <= std_logic_vector(signed("00" & A(2 downto 0))-signed("00" & B(2 downto 0)));
-                carry1 <= temp1(4);
-					 carry2 <= temp2(3);
-                C <= temp1(3 downto 0);
+					 temp2 <= std_logic_vector(signed("00" & A(6 downto 0))-signed("00" & B(6 downto 0)));
+                carry1 <= temp1(8);
+					 carry2 <= temp2(7);
+                C <= temp1(7 downto 0);
 					 carry <= carry1;
 					 if(carry1 /= carry2) then
 						overflow <= '1';
@@ -407,18 +407,18 @@ begin
 						overflow <= '0';
 					 end if;
                 
-            when "110" =>  -- AND
+            when "010" =>  -- AND
                 C <= A and B;
                 carry <= '0';
                 overflow <= '0';
 
-            when "111" =>  -- OR
+            when "011" =>  -- OR
                 C <= A or B;
                 carry <= '0';
                 overflow <= '0';
 
-            when "000" =>  -- NOT A
-                C <= not A;
+            when "100" =>  -- NOT A
+                C <= not B;
                 carry <= '0';
                 overflow <= '0';
 
@@ -428,8 +428,8 @@ begin
                 overflow <= '0';
         end case;
 
-        sinal <= temp1(3);
-		  if(temp1(3 downto 0) = "0000") then
+        sinal <= temp1(7);
+		  if(temp1(7 downto 0) = "00000000") then
 				zero <= '1';
 		  else
 				zero <= '0';
