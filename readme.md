@@ -78,28 +78,28 @@ https://wbd.ms/share/v2/aHR0cHM6Ly93aGl0ZWJvYXJkLm1pY3Jvc29mdC5jb20vYXBpL3YxLjAv
 
 Sinais de controle
 ```VHDL
-rst <=
-load_pc <=
-mem_read <=
-mem_write <=
-add_src <=
-data_src <=
-load_ir <=
-A_src <=
-B_src <=
-in_en <=
-load_A <=
-load_B <=
-alu_src1 <=
-alu_src2 <=
-aluop <=
-R_src <=
-load_r <=
-out_src <=
-load_out <=
-jmp <=
-jeq <=
-jgr <=
+rst <= '0'
+load_pc <= '0'
+mem_read <= '0'
+mem_write <= '0'
+add_src <= "000"
+data_src <= "00"
+load_ir <= '0'
+A_src <= "00"
+B_src <= "00"
+in_en <= '0'
+load_A <= '0'
+load_B <= '0'
+alu_src1 <= "00"
+alu_src2 <= "00"
+aluop <= "000"
+R_src <= "00"
+load_r <= '0'
+out_src <= "00"
+load_out <= '0'
+jmp <= '0'
+jeq <= '0'
+jgr <= '0'
 ```
 
 ```VHDL
