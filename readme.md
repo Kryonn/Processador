@@ -646,3 +646,37 @@ begin
     data_out <= temp;  -- Saída do registrador
 end behavior;
 ```
+
+Flag reg
+
+```VHDL
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity flag is
+    port(in_flag: in std_logic_vector(3 downto 0);
+       rst, load: in std_logic;
+        out_flag: out std_logic_vector(3 downto 0)); -- out_flag[0]=overflow, out_flag[1]=sinal, out_flag[2]=zero, out_flag[3]=carry
+end flag;
+
+architecture be of flag is
+
+    signal temp: std_logic_vector(3 downto 0) := "0000";
+
+begin
+
+    process(rst, load)
+    begin
+        if(rst = '1') then
+            temp <= (others => '0');
+        elsif(load = '1') then
+            temp <= in_flag;
+        end if;
+    end process;
+    out_flag <= temp;
+
+end be;
+```
+
+
