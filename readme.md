@@ -97,6 +97,7 @@ R_src <= "00"
 load_r <= '0'
 out_src <= "00"
 load_out <= '0'
+load_flag <= '0'
 jmp <= '0'
 jeq <= '0'
 jgr <= '0'
