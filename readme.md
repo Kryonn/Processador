@@ -1,3 +1,7 @@
+Máquina de estados:
+
+![Diagrama_Estados](https://github.com/user-attachments/assets/fd27a707-635b-4208-b458-ed7c77138a85)
+
 Códigos da instruções
 
 |Opcode|Instrução|
