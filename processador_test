@@ -1,0 +1,269 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity processador is
+    port(sw: in std_logic_vector(7 downto 0);
+        clk: in std_logic;    
+       leds: out std_logic_vector(7 downto 0)
+          q: out std_logic_vector(13 downto 0));
+end entity;
+
+architecture vamos_reprovar of processador is
+
+    component display
+	    port(
+            S0,S1,S2,S3: in std_logic;
+    	    P0,P1,P2,P3,P4,P5,P6: out std_logic
+        );
+    end component;
+
+    component registrador
+        port(
+            data_in: in std_logic_vector(7 downto 0);
+            rst: in std_logic;
+            load: in std_logic;
+            data_out: out std_logic_vector(7 downto 0)
+        );
+    end component;
+
+    component flag_reg
+        port(
+            data_in: in std_logic;
+            rst: in std_logic;
+            load: in std_logic;
+            data_out: out std_logic
+        );
+    end component;
+
+    component ula
+        port(
+            A: in std_logic_vector(7 downto 0);
+            B: in std_logic_vector(7 downto 0);
+            aluop: in std_logic_vector(2 downto 0);
+            C: out std_logic_vector(7 downto 0);
+            overflow: out std_logic;
+            sinal: out std_logic;
+            zero: out std_logic;
+            carry: out std_logic
+        );
+    end component;
+
+    component controle
+        port(inst: in std_logic_vector(7 downto 0);
+              clk: in std_logic;    
+      control_bus: out std_logic_vector(31 downto 0));
+    end component;
+
+    component Memoria
+        port(address : IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+               clock : IN STD_LOGIC;
+                data : IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+                wren : IN STD_LOGIC;
+                   q : OUT STD_LOGIC_VECTOR (7 DOWNTO 0) );
+    end component;
+
+    signal PC_out, MEM_address, MEM_data, MEM_out, IR_out, PC_add, jump, jumpeq, jumpgr,
+            A_in, B_in, R_in, A_wire, B_wire, R_wire, A_out, B_out, R_out, ULA_inA, ULA_inB, ULA_out,
+            out_in, out_out: std_logic_vector(7 downto 0);
+    signal rst, jmp, jeq, jgr, jeq_and, jgr_and, zero_ula, sinal_ula, carry_ula, over_ula, zero_out, sinal_out, carry_out, 
+            over_out, in_en, out_src, mem_write : std_logic;
+    signal load_pc, load_ir, load_A, load_B, load_R, load_flag, load_out, rst: std_logic;
+    signal A_src, B_src, R_src, alu_src1, alu_src2, data_src; std_logic_vector(1 downto 0);
+    signal add_src, aluop: std_logic_vector(2 downto 0);
+begin
+
+    mem: Memoria
+    port map(
+        address => MEM_address,
+        clock => clk,
+        data => MEM_data,
+        wren => mem_write,
+        q => MEM_out
+    );
+
+    uc: controle
+    port map(
+             inst => IR_out,
+              clk => clk,    
+      control_bus => rst & load_pc & mem_write & add_src & data_src & 
+                     load_ir & A_src & B_src & in_en & load_A & load_B & alu_src1 & alu_src2 & 
+                     aluop & R_src & load_R & out_src & load_out & load_flag & jmp & jeq & jgr;
+    );
+
+    pc: registrador
+    port map(
+        data_in => jumpgr, 
+        rst => rst,
+        load => load_pc,
+        data_out => PC_out
+    );
+
+    ir: registrador
+    port map(
+        data_in => MEM_out, 
+        rst => rst,
+        load => load_ir,
+        data_out => IR_out
+    );
+
+    regA: registrador
+    port map(
+        data_in => A_in, 
+        rst => rst,
+        load => load_A,
+        data_out => A_out
+    );
+
+    regB: registrador
+    port map(
+        data_in => B_in, 
+        rst: => rst,
+        load => load_B,
+        data_out => B_out
+    );
+
+    regR: registrador
+    port map(
+        data_in => R_in, 
+        rst => rst,
+        load => load_R,
+        data_out => R_out
+    );
+
+    regOut: registrador
+    port map(
+        data_in => out_in, 
+        rst: => rst,
+        load => load_out,
+        data_out => out_out
+    );
+
+    overflow: flag_reg
+    port map(
+        data_in => over_ula,
+        rst => rst,
+        load => load_flag,
+        data_out => over_out 
+    );
+
+    sinal: flag_reg
+    port map(
+        data_in => sinal_ula,
+        rst => rst,
+        load => load_flag,
+        data_out => sinal_out
+    );
+
+    carry: flag_reg
+    port map(
+        data_in => carry_ula,
+        rst => rst,
+        load => load_flag,
+        data_out => carry_out;
+    );
+
+    zero: flag_reg
+    port map(
+        data_in => zero_ula,
+        rst => rst,
+        load => load_flag,
+        data_out => zero_out;
+    );
+
+    alu: ula
+    port map(
+        A => ULA_inA,
+        B => ULA_inB,
+        aluop => aluop,
+        C => ULA_out,
+        overflow => over_ula,
+        sinal => sinal_ula,
+        zero => zero_ula,
+        carry => carry_ula
+    );
+
+    d1: display
+    port map(S0 => R_out(0),
+            S1 => R_out(1),
+            S2 => R_out(2),
+            S3 => R_out(3),
+            P0 => q(0),
+            P1 => q(1),
+            P2 => q(2),
+            P3 => q(3),
+            P4 => q(4),
+            P5 => q(5),
+            P6 => q(6)
+    );
+
+    d2: display
+    port map(S0 => R_out(4),
+            S1 => R_out(5),
+            S2 => R_out(6),
+            S3 => R_out(7),
+            P0 => q(7),
+            P1 => q(8),
+            P2 => q(9),
+            P3 => q(10),
+            P4 => q(11),
+            P5 => q(12),
+            P6 => q(13)
+    );
+
+    PC_add <= std_logic_vector(unsigned(PC_out)+1);
+    jump <= PC_add when jmp = '0' else IR_out;
+    jumpeq <= jump when jeq_and = '0' else IR_out;
+    jumpgr <= jumpeq when jgr_and = '0' else IR_out;
+    jeq_and <= jeq and zero_out;
+    jgr_and <= jgr and not sinal_out;
+
+    MEM_address <= PC_out when add_src = "000" else
+                    A_out when add_src = "001" else
+                    B_out when add_src = "010" else
+                    R_out when add_src = "011" else
+                  MEM_out when add_src = "100" else
+                   IR_out when add_src = "101" else
+                   "00000000";
+                   
+    MEM_data <= A_out when data_src = "00" else
+                B_out when data_src = "01" else
+                R_out when data_src = "10" else
+                "00000000";
+
+    A_wire <= B_out when A_src = "01" else
+              R_out when A_src = "10" else
+            MEM_out when A_src = "11" else
+         "00000000" when A_src = "00";
+
+    B_wire <= A_out when B_src = "00" else
+              R_out when B_src = "10" else
+            MEM_out when B_src = "11" else
+         "00000000" when B_src = "01";
+
+    R_wire <= A_out when R_src = "00" else
+              B_out when R_src = "01" else
+            MEM_out when R_src = "11" else
+            ULA_out when R_src = "10";
+
+    A_in <= A_wire when in_en = '0' else sw;
+    B_in <= B_wire when in_en = '0' else sw;
+    R_in <= R_wire when in_en = '0' else sw;
+
+    ULA_inA <= A_out when alu_src1 = "00" else
+               B_out when alu_src1 = "01" else
+               R_out when alu_src1 = "10" else
+               "00000000" when alu_src1 = "11";
+
+    ULA_inB <= A_out when alu_src2 = "00" else
+               B_out when alu_src2 = "01" else
+               R_out when alu_src2 = "10" else
+               MEM_out when alu_src2 = "11";
+    
+    out_in <= A_out when out_src = "00" else
+              B_out when out_src = "01" else
+              R_out when out_src = "10" else
+              "00000000";
+
+    leds <= out_out;
+end vamos_reprovar;
