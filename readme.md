@@ -1,4 +1,4 @@
-# Praticas em Sistemas Digitais - SSC0108
+# Prática em Sistemas Digitais - SSC0108
 
 ## Projeto final
 
@@ -37,7 +37,204 @@ Como a memória possui 8 bits de endereçamento e cada dado também possui 8 bit
 
 ### Componentes
 
+O processador é composto por quatro tipos de componentes:
 
+#### Registradores
+Responsável por armazenar valores temporários.
+
+##### Resgistrador de 8 bits
+```VHDL
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity reg is
+    port(
+        data_in: in std_logic_vector(7 downto 0);
+        rst: in std_logic;
+        load: in std_logic;
+        data_out: out std_logic_vector(7 downto 0)
+    );
+end reg;
+
+architecture behavior of reg is
+    signal temp: std_logic_vector(7 downto 0) := (others => '0');
+
+begin
+    process(rst, load)
+    begin
+        if rst = '1' then
+            temp <= (others => '0');
+        elsif load = '1' then
+            temp <= data_in;
+        end if;
+    end process;
+
+    data_out <= temp;
+end behavior;
+```
+São, no total, seis registradores de 8 bits, sendo eles: PC, IR, RegA, RegB, RegR, RegOut. 
+
+##### Registrador de 1 bit
+```VHDL
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity flag_reg is
+    port(
+        data_in: in std_logic;
+        rst: in std_logic;
+        load: in std_logic;
+        data_out: out std_logic
+    );
+end flag_reg;
+
+architecture behavior of flag_reg is
+    signal temp: std_logic := '0';
+
+begin
+    process(rst, load)
+    begin
+        if rst = '1' then
+            temp <= '0';
+        elsif load = '1' then
+            temp <= data_in;
+        end if;
+    end process;
+
+    data_out <= temp;
+end behavior;
+```
+São, no total, quatro registradores de 1 bit, sendo eles: Zero, Over, Sinal e Carry.
+
+#### Memória
+Responsável por armazenar as instruções e dados. O processador possui apenas uma memória(RAM).
+
+##### Memória 256x8
+```VHDL
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity Memoria is
+	port(address : IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+		  clock : IN STD_LOGIC := '1';
+	  	  data : IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+		  wren : IN STD_LOGIC ;
+		  q : OUT STD_LOGIC_VECTOR (7 DOWNTO 0) );
+end Memoria;
+
+architecture be of Memoria is
+	
+	component ram256x8
+		PORT ( address : IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+				 clock : IN STD_LOGIC := '1';
+				 data : IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+				 wren : IN STD_LOGIC ;
+				 q : OUT STD_LOGIC_VECTOR (7 DOWNTO 0) );
+	end component;
+	
+begin
+
+	inst1: ram256x8
+	port map(address => address,
+				clock => clock,
+				data => data,
+				wren => wren,
+				q => q);
+
+end be;
+```
+
+#### ULA
+Responsável por realizar as operações aritméticas e lógicas.
+
+##### Ula
+```VHDL
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity ula is
+    port(
+        A: in std_logic_vector(7 downto 0);
+        B: in std_logic_vector(7 downto 0);
+        aluop: in std_logic_vector(2 downto 0);
+        C: out std_logic_vector(7 downto 0);
+        overflow: out std_logic;
+        sinal: out std_logic;
+        zero: out std_logic;
+        carry: out std_logic
+    );
+end ula;
+
+architecture behavior of ula is
+	
+	signal temp1, temp2: std_logic_vector(8 downto 0);
+	signal carry1, carry2: std_logic;
+	
+begin
+    process(A, B, aluop)
+    begin
+        case aluop is
+            when "000" =>  -- Adição
+                temp1 <= std_logic_vector(signed('0' & A) + signed('0' & B));
+					 temp2 <= std_logic_vector(signed("00" & A(6 downto 0))+signed("00" & B(6 downto 0)));
+                carry1 <= temp1(8);
+					 carry2 <= temp2(7);
+                C <= temp1(7 downto 0);
+					 carry <= carry1;
+					 if(carry1 /= carry2) then
+						overflow <= '1';
+					 else
+						overflow <= '0';
+					 end if;
+                
+            when "001" =>  -- Subtração
+                temp1 <= std_logic_vector(signed('0' & A) - signed('0' & B));
+					 temp2 <= std_logic_vector(signed("00" & A(6 downto 0))-signed("00" & B(6 downto 0)));
+                carry1 <= temp1(8);
+					 carry2 <= temp2(7);
+                C <= temp1(7 downto 0);
+					 carry <= carry1;
+					 if(carry1 /= carry2) then
+						overflow <= '1';
+					 else
+						overflow <= '0';
+					 end if;
+                
+            when "010" =>  -- AND
+                C <= A and B;
+                carry <= '0';
+                overflow <= '0';
+
+            when "011" =>  -- OR
+                C <= A or B;
+                carry <= '0';
+                overflow <= '0';
+
+            when "100" =>  -- NOT A
+                C <= not B;
+                carry <= '0';
+                overflow <= '0';
+
+            when others =>
+                C <= (others => '0');
+                carry <= '0';
+                overflow <= '0';
+        end case;
+
+        sinal <= temp1(7);
+		  if(temp1(7 downto 0) = "00000000") then
+				zero <= '1';
+		  else
+				zero <= '0';
+        end if;
+    end process;
+
+end behavior;
+```
+
+#### Unidade de controle
+Responsável por coordenar as ações do processador.
 
 Máquina de estados:
 
