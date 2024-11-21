@@ -33,7 +33,7 @@ As instruções que o processador deve executar são:
 * OUT: envia o valor contido em um registrador para os leds.
 * WAIT: espera pela ação do usuário.
 
-Códigos da instruções:
+Códigos das instruções:
 
 |Instrução|ADD|SUB|AND|OR|NOT|CMP|JMP|JEQ|JGR|LOAD|STORE|MOV|IN|OUT|WAIT|
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
