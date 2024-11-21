@@ -1,8 +1,23 @@
-#### Praticas em Sistemas Digitais - SSC0108
+# Praticas em Sistemas Digitais - SSC0108
 
-### Projeto final
+## Projeto final
 
-O projeto final consiste na construção de um processador digital que consiga executar as seguintes instruções:
+Este trabalho consiste no desenvolvimento de um processador digital simples, implementado em VHDL. O objetivo principal é criar uma CPU funcional, capaz de realizar operações aritméticas, lógicas, de controle de fluxo e interação com a placa FPGA, utilizando uma arquitetura básica com barramentos e componentes bem definidos.
+
+### Instruções
+
+Cada instrução possui 8 bits e apenas 3 registradores manipuláveis, por isso decidimos dividir os bits da seguinte maneira:
+
+|Opcode|Registrador 1 | Registrador 2|
+| :--: | :--: | :--: |
+|0000|00|00|
+
+* Opcode: código de instrução.
+* Registrador 1: operando A da instrução.
+* Registrador 2: operando B da instrução.
+
+As instruções que o processador deve executar são:
+
 * ADD: realiza a operação de soma entre dois registradores ou um registrador e um número imediato, armazenando o resultado no registrador R.
 * SUB: realiza a operação de subtração entre dois registradores ou um registrador e um número imediato, armazenando o resultado no registrador R.
 * AND: realiza a operação lógica AND bit a bit entre dois registradores ou um registrador e um número imediato, armazenando o resultado no registrador R.
@@ -16,7 +31,13 @@ O projeto final consiste na construção de um processador digital que consiga e
 * STORE: armazena um dado no endereço de memória indicado.
 * IN: armazena o valor de entrada em um dos registradores.
 * OUT: envia o valor contido em um registrador para os leds.
-* WAIT: espera pela ação do usuario.
+* WAIT: espera pela ação do usuário.
+
+Como a memória possui 8 bits de endereçamento e cada dado também possui 8 bits, em instruções que envolvem valores imediatos, é necessário usar duas instruções.
+
+### Componentes
+
+
 
 Máquina de estados:
 
