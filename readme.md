@@ -33,6 +33,14 @@ As instruções que o processador deve executar são:
 * OUT: envia o valor contido em um registrador para os leds.
 * WAIT: espera pela ação do usuário.
 
+Códigos da instruções:
+
+|Instrução|ADD|SUB|AND|OR|NOT|CMP|JMP|JEQ|JGR|LOAD|STORE|MOV|IN|OUT|WAIT|
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+|Opcode|0000|0001|0010|0011|0100|0101|0110|0111|1000|1001|1010|1011|1100|1101|1110|
+
+
+
 Como a memória possui 8 bits de endereçamento e cada dado também possui 8 bits, em instruções que envolvem valores imediatos, é necessário usar duas instruções.
 
 ### Componentes
