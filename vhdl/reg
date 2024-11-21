@@ -4,8 +4,8 @@ use ieee.std_logic_1164.all;
 entity reg is
     port(
         data_in: in std_logic_vector(7 downto 0);
-        rst: in std_logic;      -- Ativo em '0' para reset
-        load: in std_logic;     -- Ativo em '0' para carregar os dados
+        rst: in std_logic;
+        load: in std_logic;
         data_out: out std_logic_vector(7 downto 0)
     );
 end reg;
@@ -14,14 +14,14 @@ architecture behavior of reg is
     signal temp: std_logic_vector(7 downto 0) := (others => '0');
 
 begin
-    process(rst, load)  -- Sensibilidade aos sinais que controlam a lógica
+    process(rst, load)
     begin
         if rst = '1' then
-            temp <= (others => '0');  -- Reset do registrador quando rst é 0
+            temp <= (others => '0');
         elsif load = '1' then
-            temp <= data_in;  -- Carregando dados no registrador quando load é 0
+            temp <= data_in;
         end if;
     end process;
 
-    data_out <= temp;  -- Saída do registrador
+    data_out <= temp;
 end behavior;
