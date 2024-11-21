@@ -1,3 +1,23 @@
+#### Praticas em Sistemas Digitais - SSC0108
+
+### Projeto final
+
+O projeto final consiste na construção de um processador digital que consiga executar as seguintes instruções:
+* ADD: realiza a operação de soma entre dois registradores ou um registrador e um número imediato, armazenando o resultado no registrador R.
+* SUB: realiza a operação de subtração entre dois registradores ou um registrador e um número imediato, armazenando o resultado no registrador R.
+* AND: realiza a operação lógica AND bit a bit entre dois registradores ou um registrador e um número imediato, armazenando o resultado no registrador R.
+* OR: realiza a operação lógica OR bit a bit entre dois registradores ou um registrador e um número imediato, armazenando o resultado no registrador R.
+* NOT: realiza a operação lógica NOT entre um valor contido em um registrador ou um valor imediato, armazenando o resultado no registrador R.
+* CMP: compara os valores contidos em registradores ou imediatos e armazena as flags nos registradores.
+* JMP: altera o fluxo de execução para o endereço indicado na instrução.
+* JEQ: altera o fluxo de execução para o endereço indicado na instrução, caso a última comparação tenha resultado em A=B.
+* JGR: altera o fluxo de execução para o endereço indicado na instrução, caso a última comparação tenha resultado em A>B.
+* LOAD: carrega um dado da memória para um registrador, de acordo com o endereço indicado. 
+* STORE: armazena um dado no endereço de memória indicado.
+* IN: armazena o valor de entrada em um dos registradores.
+* OUT: envia o valor contido em um registrador para os leds.
+* WAIT: espera pela ação do usuario.
+
 Máquina de estados:
 
 ![Diagrama_Estados](https://github.com/user-attachments/assets/fd27a707-635b-4208-b458-ed7c77138a85)
