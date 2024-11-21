@@ -244,7 +244,11 @@ end behavior;
 #### Unidade de controle
 Responsável por coordenar as ações do processador.
 
-Máquina de estados:
+
+### Integração
+Para o bom funcionamento do processador, decidimos usar a seguinte arquitetura:
+![null](https://github.com/user-attachments/assets/9efb6f72-fafb-44a1-8fd0-5659a790e3ca)
+
 
 ![Diagrama_Estados](https://github.com/user-attachments/assets/fd27a707-635b-4208-b458-ed7c77138a85)
 
