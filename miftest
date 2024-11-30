@@ -92,7 +92,7 @@ BEGIN
 END;
 
 
-
+## TESTE IN ##
 
 DEPTH = 256;
 WIDTH = 8;
@@ -103,5 +103,22 @@ BEGIN
 0 : 11000000 ; -- IN in A
 1 : 11000100 ; -- IN in B
 1 : 11001000 ; -- IN in R
+
+END;
+
+
+
+## TESTE OUT ##
+
+
+DEPTH = 256;
+WIDTH = 8;
+ADDRESS_RADIX = HEX;
+DATA_RADIX = BIN;
+CONTENT
+BEGIN
+0 : 11010000 ; -- IN in A
+1 : 11010100 ; -- IN in B
+1 : 11011000 ; -- IN in R
 
 END;
