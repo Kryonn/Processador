@@ -123,5 +123,6 @@ BEGIN
 3 : 11010000 ; -- OUT out A
 4 : 11010100 ; -- OUT out B
 5 : 11011000 ; -- OUT out R
+6 : 11100000 ; -- WAIT 
 
 END;
