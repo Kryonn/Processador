@@ -249,8 +249,8 @@ Responsável por coordenar as ações do processador.
 Para o bom funcionamento do processador, decidimos usar a seguinte arquitetura:
 ![null](https://github.com/user-attachments/assets/9efb6f72-fafb-44a1-8fd0-5659a790e3ca)
 
+![Diagrama_Estados](https://github.com/user-attachments/assets/a1bab6d2-bb92-4641-9a59-84745a2f543f)
 
-![Diagrama_Estados](https://github.com/user-attachments/assets/fd27a707-635b-4208-b458-ed7c77138a85)
 
 Códigos da instruções
 
