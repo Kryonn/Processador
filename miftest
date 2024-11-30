@@ -70,3 +70,44 @@ F : 00000011; -- ADD A + imm
 
 
 END;
+
+
+DEPTH = 256;
+WIDTH = 8;
+ADDRESS_RADIX = HEX;
+DATA_RADIX = BIN;
+CONTENT
+BEGIN
+0 : 00000011; -- ADD A + imm
+1 : 00000001; -- imm = 1
+2 : 00000111; -- ADD B + imm
+3 : 00000010; -- imm = 2
+4 : 00001010; -- ADD R + R
+5 : 00010011; -- SUB A - imm
+6 : 00000001; -- imm = 1
+7 : 00010111; -- SUB B - imm
+8 : 00000010; -- imm = 2
+9 : 00011010; -- SUB R - R
+A : 00100011; -- AND A and imm
+B : 00000001; -- imm = 1
+C : 00100111; -- AND B and imm
+D : 00000010; -- imm = 2
+E : 00101010; -- AND R and R
+F : 00000011; -- ADD A + imm
+10 : 00000001; -- imm = 1
+11 : 00101010; -- AND R and R
+12 : 01000010; -- NOT R
+13 : 01010001; -- CMP A cmp B
+14 : 01010000; -- CMP A cmp A
+15 : 00110001; -- OR A or B
+16 : 00111010; -- OR R or R
+17 : 10000000; -- JGR imm
+18 : 00000111; -- imm = 7 
+19 : 00000011; -- ADD A + imm
+1A : 00000001; -- imm = 1
+1B : 01011000; -- CMP A cmp R
+1C : 10000000; -- JGR imm
+1D : 00000111; -- imm = 7 
+
+
+END;
