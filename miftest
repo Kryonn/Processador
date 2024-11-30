@@ -1,3 +1,4 @@
+
 DEPTH = 256;
 WIDTH = 8;
 ADDRESS_RADIX = HEX;
@@ -87,5 +88,20 @@ BEGIN
 6 : 10000000; -- JGR imm
 7 : 00000000; -- imm = 0
 8 : 00000001; -- ADD A + B
+
+END;
+
+
+
+
+DEPTH = 256;
+WIDTH = 8;
+ADDRESS_RADIX = HEX;
+DATA_RADIX = BIN;
+CONTENT
+BEGIN
+0 : 11000000 ; -- IN in A
+1 : 11000100 ; -- IN in B
+1 : 11001000 ; -- IN in R
 
 END;
