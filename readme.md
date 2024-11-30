@@ -1818,183 +1818,872 @@ Unidade de controle
 ```VHDL
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
-entity uc is
+entity controle is
     port(inst: in std_logic_vector(7 downto 0);
-	 clk, exec: in std_logic;
-		  busca: out std_logic;
+          clk: in std_logic;    
+       estado: out std_logic_vector(4 downto 0);
   control_bus: out std_logic_vector(32 downto 0));
-end uc;
+end entity;
 
-architecture behavior of uc is
-    type state is (dec, add_, add_1, add_imm_A, add_imm_B, add_imm_R, add_imm, sub_, and_, or_, not_ cmp_, jmp_, jeq_, jgr_, load_, store_, mov_, in_, out_, wait_);
-    signal cur_state: state := idle;
-    signal next_state: state;
-	 signal load_pc: std_logic;
-    signal mem_read: std_logic;
-    signal mem_write: std_logic;
-    signal mem_en: std_logic;
-	 signal mem_src1: std_logic(2 downto 0);
-	 signal mem_src2: std_logic(1 downto 0);
-    signal load_ir: std_logic;
-	 signal A_src: std_logic_vector(1 downto 0);
-	 signal B_src: std_logic_vector(1 downto 0);
-	 signal in_en: std_logic;
-	 signal load_A: std_logic;
-	 signal load_B: std_logic;
-	 signal alu_src1: std_logic_vector(1 downto 0);
-	 signal alu_src2: std_logic_vector(1 downto 0);
-	 signal aluop: std_logic_vector(2 downto 0);
-	 signal R_src: std_logic_vector(1 downto 0);
-	 signal load_r: std_logic;
-	 signal out_src: std_logic_vector(1 downto 0);
-	 signal load_out: std_logic;
-	 signal jmp: std_logic;
-	 signal jeq: std_logic;
-	 signal jgr: std_logic;
-	 
+
+architecture be of controle is
+
+	 type state is (ini, busca1, busca2, decode, R_exec, R_exec_imm1, R_exec_imm2, R_exec_imm3, CMP_exec, CMP_exec_imm1,
+                    CMP_exec_imm2, CMP_exec_imm3, JMP_exec1, JMP_exec2, JMP_exec3, JMP_exec4, JEQ_exec1, JEQ_exec2, JEQ_exec3, JEQ_exec4 ,
+						  JGR_exec1, JGR_exec2, JGR_exec3, JGR_exec4, in_a, in_b, in_r, out1, wait1, Pc);
+    signal cur_state: state := ini;
+	 signal next_state: state := ini;
+
+    signal rst, load_pc, mem_write, load_ir, in_en, load_A, load_B, load_R, load_out, load_flag, jmp, jeq, jgr: std_logic := '0';
+    signal data_src, A_src, B_src, alu_src1, alu_src2, R_src, out_src: std_logic_vector(1 downto 0) := "00";
+    signal add_src, aluop: std_logic_vector(2 downto 0) := "000";
+
 begin
-    process
+    process(clk)
     begin
-	 if(exec = '1') then
-		  busca <= '0';
-		  load_pc <= '0';
-		  mem_read <= '0';
-		  mem_write <= '0';
-		  mem_en <= '1';
-		  mem_src1 <= "000"
-		  mem_src2 <= "00"
-		  load_ir <= '0';
-		  A_src <= "00";
-		  B_src <= "00";
-		  in_en <= '0';
-		  load_A <= '0';
-		  load_B <= '0';
-		  alu_src1 <= "00";
-		  alu_src2 <= "00";
-		  aluop <= "000";
-		  R_src <= "00";
-		  load_r <= '0';
-		  out_src <= "00";
-		  load_out <= '0';
-		  jmp <= '0';
-		  jeq <= '0';
-		  jgr <= '0';
-        case(state) is
-            when dec =>
-                case(inst(7 downto 4)) is
-                    when "0000" =>
-                        next_state <= add_;
-                    when "0001" =>
-                        next_state <= sub_;
-                    when "0010" =>
-                        next_state <= and_;
-                    when "0011" =>
-                        next_state <= or_;
-                    when "0100" =>
-                        next_state <= not_;
-                    when "0101" =>
-                        next_state <= cmp_;
-                    when "0110" =>
-                        next_state <= jmp_;
-                    when "0111" =>
-                        next_state <= jeq_;
-                    when "1000" =>
-                        next_state <= jgr_;
-                    when "1001" =>
-                        next_state <= load_;
-                    when "1010" =>
-                        next_state <= store_;
-                    when "1011" =>
-                        next_state <= mov_;
-                    when "1100" =>
-                        next_state <= in_;
-                    when "1101" =>
-                        next_state <= out_;
-                    when "1110" =>
-                        next_state <= wait_;
-                    when (others) =>
-                        next_state <= dec;
-                end case;
-
-            when add_ =>
-					case(inst(1 downto 0)) is
-						when "11" =>
-							case(inst(3 downto 2)) is
-								when "00" =>
-									next_state <= add_imm_A;
-								when "01" =>
-									next_state <= add_imm_B;
-								when "10" =>
-									next_state <= add_imm_R;
-								when others =>
-									next_state <= dec;
-							end case;
-						when others =>
-							next_state <= add_1;
-					end case;
-						
-				when add_1 =>
-					load_pc <= '0';
-					mem_read <= '0';
-					mem_write <= '0';
-					mem_en <= '1';
-					mem_src1 <= "000"
-					mem_src2 <= "00"
-					load_ir <= '0';
-					A_src <= "00";
-					B_src <= "00";
-					in_en <= '0';
-					load_A <= '0';
-					load_B <= '0';
-					alu_src1 <= inst(3 downto 2);
-					alu_src2 <= inst(1 downto 0);
-					aluop <= "000";
-					R_src <= "00";
-					load_r <= '1';
-					out_src <= "00";
-					load_out <= '0';
-					jmp <= '0';
-					jeq <= '0';
-					jgr <= '0';
-					next_state <= dec;
-					busca <= '1';
-					
-				when add_imm_A =>
-					load_pc <= '1';
-					mem_read <= '1';
-					mem_write <= '0';
-					mem_en <= '1';
-					mem_src1 <= "000"
-					mem_src2 <= "00"
-					load_ir <= '0';
-					A_src <= "00";
-					B_src <= "00";
-					in_en <= '0';
-					load_A <= '0';
-					load_B <= '0';
-					alu_src1 <= "00";
-					alu_src2 <= "11";
-					aluop <= "000";
-					R_src <= "00";
-					load_r <= '1';
-					out_src <= "00";
-					load_out <= '0';
-					jmp <= '0';
-					jeq <= '0';
-					jgr <= '0';
-					next_state <= dec;
-					busca <= '1';
-					
-	 else
-		next_state <= dec;
-    end if;
+        if(rising_edge(clk)) then
+            cur_state <= next_state;
+        end if;
+        case(cur_state) is
+            when ini => estado <= "00000";
+            when busca1 => estado <= "00001";
+				when busca2 => estado <= "00010";
+            when decode => estado <= "00011";
+				when R_exec => estado <= "00100";
+            when R_exec_imm1 => estado <= "00101";
+				when R_exec_imm2 => estado <= "00110";
+				when R_exec_imm3 => estado <= "00111";
+				when CMP_exec => estado <= "01000";
+				when CMP_exec_imm1 => estado <= "01001";
+				when CMP_exec_imm2 => estado <= "01010";
+				when CMP_exec_imm3 => estado <= "01011";
+				when JMP_exec1 => estado <= "01100";
+				when JMP_exec2 => estado <= "01101";
+				when JMP_exec3 => estado <= "01110";
+				when JMP_exec4 => estado <= "01111";
+				when JEQ_exec1 => estado <= "10000";
+				when JEQ_exec2 => estado <= "10001";
+				when JEQ_exec3 => estado <= "10010";
+				when JEQ_exec4 => estado <= "10011";
+				when JGR_exec1 => estado <= "10100";
+				when JGR_exec2 => estado <= "10101";
+				when JGR_exec3 => estado <= "10110";
+				when JGR_exec4 => estado <= "10111";
+				when in_a => estado <= "11000";
+				when in_b => estado <= "11001";
+				when in_r => estado <= "11010";
+				when out1 => estado <= "11011";
+				when wait1 => estado <= "11100";
+				when Pc => estado <= "11101";
+				when others => estado <= "00000";
+        end case;
     end process;
+
+    process(cur_state)
+    begin
+            case (cur_state) is
+                when ini =>
+                    rst <= '1';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= busca2;
+
+                when busca1 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0'; 
+                    next_state <= busca2;
+						  
+					 when busca2 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '1';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0'; 
+                    next_state <= decode;
+
+                when decode =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    case(inst(7 downto 4)) is
+                        when "0000" | "0001" | "0010" | "0011" | "0100" => 
+                            if(inst(1 downto 0) = "11") then
+                                next_state <= R_exec_imm1;
+                            else
+                                next_state <= R_exec;
+                            end if;
+
+                        when "0101" =>
+                            if(inst(1 downto 0) = "11") then
+                                next_state <= CMP_exec_imm1;
+                            else
+                                next_state <= CMP_exec;
+                            end if;    
+                        
+                        when "0110" =>
+                            next_state <= JMP_exec1;
+
+                        when "0111" =>
+                            next_state <= JEQ_exec1;
+
+                        when "1000" =>
+                            next_state <= JGR_exec1;
+									 
+								when "1100" =>
+								    case(inst(3 downto 2)) is
+										when "00" => next_state <= in_a;
+										when "01" => next_state <= in_b;
+										when "10" => next_state <= in_r;
+										when "11" => next_state <= ini;
+									 end case;
+									 
+								when "1101" =>
+									 next_state <= out1;
+								
+								when "1110" =>
+									 next_state <= wait1;
+
+                        when others =>
+                            next_state <= busca1;
+                    end case;
+
+                when R_exec =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= inst(3 downto 2);
+                    alu_src2 <= inst(1 downto 0);
+                    aluop <= inst(6 downto 4);
+                    R_src <= "10";
+                    load_r <= '1';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= Pc;
+
+                when R_exec_imm1 =>
+                    rst <= '0';
+                    load_pc <= '1';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= inst(3 downto 2);
+                    alu_src2 <= inst(1 downto 0);
+                    aluop <= inst(6 downto 4);
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= R_exec_imm2;
+						  
+					 when R_exec_imm2 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= inst(3 downto 2);
+                    alu_src2 <= inst(1 downto 0);
+                    aluop <= inst(6 downto 4);
+                    R_src <= "10";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= R_exec_imm3;
+						  
+					when R_exec_imm3 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= inst(3 downto 2);
+                    alu_src2 <= inst(1 downto 0);
+                    aluop <= inst(6 downto 4);
+                    R_src <= "10";
+                    load_r <= '1';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= Pc;
+
+                when CMP_exec =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= inst(3 downto 2);
+                    alu_src2 <= inst(1 downto 0);
+                    aluop <= "001";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '1';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= Pc;
+
+                when CMP_exec_imm1 =>
+                    rst <= '0';
+                    load_pc <= '1';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= CMP_exec_imm2;
+					
+					 when CMP_exec_imm2 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= CMP_exec_imm3;
+						  
+					when CMP_exec_imm3 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= inst(3 downto 2);
+                    alu_src2 <= inst(1 downto 0);
+                    aluop <= "001";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '1';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= Pc;
+
+                when JMP_exec1 =>
+                    rst <= '0';
+                    load_pc <= '1';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= JMP_exec2;
+						  
+					when JMP_exec2 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= JMP_exec3;
+						  
+					when JMP_exec3 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '1';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= JMP_exec4;
+						  
+					when JMP_exec4 =>
+                    rst <= '0';
+                    load_pc <= '1';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '1';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= busca1;
+						  
+					 when JEQ_exec1 =>
+                    rst <= '0';
+                    load_pc <= '1';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= JEQ_exec2;
+						  
+					when JEQ_exec2 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= JEQ_exec3;
+						  
+					when JEQ_exec3 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '1';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= JEQ_exec4;
+						  
+					when JEQ_exec4 =>
+                    rst <= '0';
+                    load_pc <= '1';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '1';
+                    jgr <= '0';
+                    next_state <= busca1;
+						  
+					 when JGR_exec1 =>
+                    rst <= '0';
+                    load_pc <= '1';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= JGR_exec2;
+						  
+					when JGR_exec2 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= JGR_exec3;
+						  
+					when JGR_exec3 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '1';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= JGR_exec4;
+						  
+					when JGR_exec4 =>
+                    rst <= '0';
+                    load_pc <= '1';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '1';
+                    next_state <= busca1;
+						  
+					when in_A =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '1';
+                    load_A <= '1';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= pc;
+						  
+					when in_B =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '1';
+                    load_A <= '0';
+                    load_B <= '1';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= pc;
+						  
+					when in_R =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '1';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '1';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= pc;
+						  
+					when out1 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= inst(3 downto 2);
+                    load_out <= '1';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= pc;
+						  
+					when wait1 =>
+                    rst <= '0';
+                    load_pc <= '0';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+                    load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= wait1;
+                                
+                when Pc =>
+                    rst <= '0';
+                    load_pc <= '1';
+                    mem_write <= '0';
+                    add_src <= "000";
+                    data_src <= "00";
+                    load_ir <= '0';
+                    A_src <= "00";
+                    B_src <= "00";
+                    in_en <= '0';
+                    load_A <= '0';
+                    load_B <= '0';
+                    alu_src1 <= "00";
+                    alu_src2 <= "00";
+                    aluop <= "000";
+                    R_src <= "00";
+                    load_r <= '0';
+                    out_src <= "00";
+                    load_out <= '0';
+					load_flag <= '0';
+                    jmp <= '0';
+                    jeq <= '0';
+                    jgr <= '0';
+                    next_state <= busca1;
+            end case;
+              
+                    
+    end process;
+
 	 
-	 control_bus <= load_pc & mem_read & mem_write & mem_en & mem_src1 & mem_src2 & 
-						 load_ir & A_src & B_src & in_en & load_A & load_B & alu_src1 & alu_src2 & 
-						 aluop & R_src & load_R & out_src & load_out & jmp & jeq & jgr;
-end behavior;
+    control_bus <= rst & load_pc & mem_write & add_src & data_src & 
+                  load_ir & A_src & B_src & in_en & load_A & load_B & alu_src1 & alu_src2 & 
+                  aluop & R_src & load_R & out_src & load_out & load_flag & jmp & jeq & jgr;
+
+end be;
 ```
 
 ULA
