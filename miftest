@@ -117,8 +117,8 @@ ADDRESS_RADIX = HEX;
 DATA_RADIX = BIN;
 CONTENT
 BEGIN
-0 : 11010000 ; -- IN in A
-1 : 11010100 ; -- IN in B
-2 : 11011000 ; -- IN in R
+0 : 11010000 ; -- OUT out A
+1 : 11010100 ; -- OUT out B
+2 : 11011000 ; -- OUT out R
 
 END;
