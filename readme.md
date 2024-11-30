@@ -366,13 +366,17 @@ entity processador is
     port(sw: in std_logic_vector(7 downto 0);
         clk: in std_logic;    
        leds: out std_logic_vector(7 downto 0);
-		    q: out std_logic_vector(13 downto 0)); 
+		    q: out std_logic_vector(13 downto 0); 
+			 p: out std_logic_vector(6 downto 0);
+		    s: out std_logic_vector(6 downto 0);
+			 u: out std_logic_vector(6 downto 0));
 end entity;
 
 architecture vamos_reprovar of processador is
 
     component registrador
         port(
+				clk: in std_logic;
             data_in: in std_logic_vector(7 downto 0);
             rst: in std_logic;
             load: in std_logic;
@@ -405,6 +409,7 @@ architecture vamos_reprovar of processador is
     component controle
         port(inst: in std_logic_vector(7 downto 0);
               clk: in std_logic;    
+				  estado: out std_logic_vector(4 downto 0);
       control_bus: out std_logic_vector(32 downto 0));
     end component;
 
@@ -463,6 +468,7 @@ architecture vamos_reprovar of processador is
     signal out_src, A_src, B_src, R_src, alu_src1, alu_src2, data_src: std_logic_vector(1 downto 0);
     signal add_src, aluop: std_logic_vector(2 downto 0);
 	 signal control_bus: std_logic_vector(32 downto 0);
+	 signal estado: std_logic_vector(4 downto 0);
 begin
 
     mem: Memoria
@@ -478,11 +484,13 @@ begin
     port map(
              inst => IR_out,
               clk => clk,    
+				  estado => estado,
       control_bus => control_bus
     );
 
     pc: registrador
     port map(
+			clk => clk,
         data_in => jumpgr, 
         rst => rst,
         load => load_pc,
@@ -491,6 +499,7 @@ begin
 
     ir: registrador
     port map(
+			clk => clk,
         data_in => MEM_out, 
         rst => rst,
         load => load_ir,
@@ -499,6 +508,7 @@ begin
 
     regA: registrador
     port map(
+			clk => clk,
         data_in => A_in, 
         rst => rst,
         load => load_A,
@@ -507,6 +517,7 @@ begin
 
     regB: registrador
     port map(
+			clk => clk,
         data_in => B_in, 
         rst => rst,
         load => load_B,
@@ -515,6 +526,7 @@ begin
 
     regR: registrador
     port map(
+			clk => clk,
         data_in => R_in, 
         rst => rst,
         load => load_R,
@@ -523,6 +535,7 @@ begin
 
     regOut: registrador
     port map(
+			clk => clk,
         data_in => out_in, 
         rst => rst,
         load => load_out,
@@ -655,7 +668,7 @@ begin
 	 port map(
 		  entrada1 => A_out,
 		  entrada2 => B_out,
-		  entrada3 => "00000000",
+		  entrada3 => ULA_out,
 		  entrada4 => MEM_out,
 		  seletor => R_src,
 		  saida => R_wire
@@ -704,10 +717,10 @@ begin
 	 );
 	 
 	 d1: display
-    port map(S0 => IR_out(0),
-            S1 => IR_out(1),
-            S2 => IR_out(2),
-            S3 => IR_out(3),
+    port map(S0 => R_out(0),
+            S1 => R_out(1),
+            S2 => R_out(2),
+            S3 => R_out(3),
             P0 => q(0),
             P1 => q(1),
             P2 => q(2),
@@ -718,10 +731,10 @@ begin
     );
 
     d2: display
-    port map(S0 => IR_out(4),
-            S1 => IR_out(5),
-            S2 => IR_out(6),
-            S3 => IR_out(7),
+    port map(S0 => R_out(4),
+            S1 => R_out(5),
+            S2 => R_out(6),
+            S3 => R_out(7),
             P0 => q(7),
             P1 => q(8),
             P2 => q(9),
@@ -730,17 +743,80 @@ begin
             P5 => q(12),
             P6 => q(13)
     );
-
+	 
+	 d3: display
+    port map(S0 => estado(0),
+            S1 => estado(1),
+            S2 => estado(2),
+            S3 => estado(3),
+            P0 => p(0),
+            P1 => p(1),
+            P2 => p(2),
+            P3 => p(3),
+            P4 => p(4),
+            P5 => p(5),
+            P6 => p(6)
+    );
+	 
+	 
+	 
+	 d4: display
+    port map(S0 => over_out,
+            S1 => sinal_out,
+            S2 => carry_out,
+            S3 => zero_out,
+            P0 => s(0),
+            P1 => s(1),
+            P2 => s(2),
+            P3 => s(3),
+            P4 => s(4),
+            P5 => s(5),
+            P6 => s(6)
+    );
+	 
+	 d5: display
+    port map(S0 => estado(4),
+            S1 => '0',
+            S2 => '0',
+            S3 => '0',
+            P0 => u(0),
+            P1 => u(1),
+            P2 => u(2),
+            P3 => u(3),
+            P4 => u(4),
+            P5 => u(5),
+            P6 => u(6)
+    );
+	 
     PC_add <= std_logic_vector(unsigned(PC_out)+1);
     jeq_and <= jeq and zero_out;
-    jgr_and <= jgr and not sinal_out;
+    jgr_and <= jgr and (not (A_out(7) xor sinal_out)) and (not zero_out);
 
 
     leds <= out_out;
-	 
-	 control_bus <= rst & load_pc & mem_write & add_src & data_src & 
-						load_ir & A_src & B_src & in_en & load_A & load_B & alu_src1 & alu_src2 & 
-						aluop & R_src & load_R & out_src & load_out & load_flag & jmp & jeq & jgr;
+
+	 rst <= control_bus(32);
+	 load_pc <= control_bus(31);
+	 mem_write <= control_bus(30);
+	 add_src <= control_bus(29 downto 27);
+	 data_src <= control_bus(26 downto 25);
+	 load_ir <= control_bus(24);
+	 A_src <= control_bus(23 downto 22);
+	 B_src <= control_bus(21 downto 20);
+	 in_en <= control_bus(19);
+	 load_A <= control_bus(18);
+	 load_B <= control_bus(17);
+	 alu_src1 <= control_bus(16 downto 15);
+	 alu_src2 <= control_bus(14 downto 13);
+	 aluop <= control_bus(12 downto 10);
+	 R_src <= control_bus(9 downto 8);
+	 load_R <= control_bus(7);
+	 out_src <= control_bus(6 downto 5);
+	 load_out <= control_bus(4);
+	 load_flag <= control_bus(3);
+	 jmp <= control_bus(2);
+	 jeq <= control_bus(1);
+	 jgr <= control_bus(0);
 	 
 end vamos_reprovar;
 ```
