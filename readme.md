@@ -365,7 +365,8 @@ use ieee.numeric_std.all;
 entity processador is
     port(sw: in std_logic_vector(7 downto 0);
         clk: in std_logic;    
-       leds: out std_logic_vector(7 downto 0));
+       leds: out std_logic_vector(7 downto 0);
+		    q: out std_logic_vector(13 downto 0)); 
 end entity;
 
 architecture vamos_reprovar of processador is
@@ -404,7 +405,7 @@ architecture vamos_reprovar of processador is
     component controle
         port(inst: in std_logic_vector(7 downto 0);
               clk: in std_logic;    
-      control_bus: out std_logic_vector(31 downto 0));
+      control_bus: out std_logic_vector(32 downto 0));
     end component;
 
     component Memoria
@@ -414,15 +415,54 @@ architecture vamos_reprovar of processador is
                 wren : IN STD_LOGIC;
                    q : OUT STD_LOGIC_VECTOR (7 DOWNTO 0) );
     end component;
+	 
+	 component mux2x1
+    port(entrada1: in std_logic_vector(7 downto 0);
+        entrada2: in std_logic_vector(7 downto 0);
+        seletor: in std_logic;
+        saida: out std_logic_vector(7 downto 0));
+	 end component;
+	 
+	 component mux4x1
+        port(
+        entrada1: in std_logic_vector(7 downto 0);
+        entrada2: in std_logic_vector(7 downto 0);
+        entrada3: in std_logic_vector(7 downto 0);
+        entrada4: in std_logic_vector(7 downto 0);
+        seletor: in std_logic_vector(1 downto 0);
+        saida: out std_logic_vector(7 downto 0)
+    );
+    end component;
+	 
+	 component mux6x1
+        port(
+        entrada1: in std_logic_vector(7 downto 0);
+        entrada2: in std_logic_vector(7 downto 0);
+        entrada3: in std_logic_vector(7 downto 0);
+        entrada4: in std_logic_vector(7 downto 0);
+        entrada5: in std_logic_vector(7 downto 0);
+        entrada6: in std_logic_vector(7 downto 0);
+        seletor: in std_logic_vector(2 downto 0);
+        saida: out std_logic_vector(7 downto 0)
+	 );
+    end component;
+	 
+	 component display
+	    port(
+            S0,S1,S2,S3: in std_logic;
+    	    P0,P1,P2,P3,P4,P5,P6: out std_logic
+        );
+    end component;
 
     signal PC_out, MEM_address, MEM_data, MEM_out, IR_out, PC_add, jump, jumpeq, jumpgr,
             A_in, B_in, R_in, A_wire, B_wire, R_wire, A_out, B_out, R_out, ULA_inA, ULA_inB, ULA_out,
             out_in, out_out: std_logic_vector(7 downto 0);
-    signal rst, jmp, jeq, jgr, jeq_and, jgr_and, zero_ula, sinal_ula, carry_ula, over_ula, zero_out, sinal_out, carry_out, 
-            over_out, in_en, out_src, mem_write : std_logic;
+    signal jmp, jeq, jgr, jeq_and, jgr_and, zero_ula, sinal_ula, carry_ula, over_ula, zero_out, sinal_out, carry_out, 
+            over_out, in_en, mem_write : std_logic;
     signal load_pc, load_ir, load_A, load_B, load_R, load_flag, load_out, rst: std_logic;
-    signal A_src, B_src, R_src, alu_src1, alu_src2, data_src; std_logic_vector(1 downto 0);
+    signal out_src, A_src, B_src, R_src, alu_src1, alu_src2, data_src: std_logic_vector(1 downto 0);
     signal add_src, aluop: std_logic_vector(2 downto 0);
+	 signal control_bus: std_logic_vector(32 downto 0);
 begin
 
     mem: Memoria
@@ -438,9 +478,7 @@ begin
     port map(
              inst => IR_out,
               clk => clk,    
-      control_bus => rst & load_pc & mem_write & add_src & data_src & 
-                     load_ir & A_src & B_src & in_en & load_A & load_B & alu_src1 & alu_src2 & 
-                     aluop & R_src & load_R & out_src & load_out & load_flag & jmp & jeq & jgr;
+      control_bus => control_bus
     );
 
     pc: registrador
@@ -470,7 +508,7 @@ begin
     regB: registrador
     port map(
         data_in => B_in, 
-        rst: => rst,
+        rst => rst,
         load => load_B,
         data_out => B_out
     );
@@ -486,7 +524,7 @@ begin
     regOut: registrador
     port map(
         data_in => out_in, 
-        rst: => rst,
+        rst => rst,
         load => load_out,
         data_out => out_out
     );
@@ -512,7 +550,7 @@ begin
         data_in => carry_ula,
         rst => rst,
         load => load_flag,
-        data_out => carry_out;
+        data_out => carry_out
     );
 
     zero: flag_reg
@@ -520,7 +558,7 @@ begin
         data_in => zero_ula,
         rst => rst,
         load => load_flag,
-        data_out => zero_out;
+        data_out => zero_out
     );
 
     alu: ula
@@ -534,64 +572,290 @@ begin
         zero => zero_ula,
         carry => carry_ula
     );
+	 
+	 m1: mux2x1
+	 port map(
+		  entrada1 => PC_add,
+		  entrada2 => IR_out,
+		  seletor => jmp,
+		  saida => jump
+	 );
+	 
+	 m2: mux2x1
+	 port map(
+		  entrada1 => jump,
+		  entrada2 => IR_out,
+		  seletor => jeq_and,
+		  saida => jumpeq
+	 );
+	 
+	 m3: mux2x1
+	 port map(
+		  entrada1 => jumpeq,
+		  entrada2 => IR_out,
+		  seletor => jgr_and,
+		  saida => jumpgr
+	 );
+	 
+	 m4: mux2x1
+	 port map(
+		  entrada1 => A_wire,
+		  entrada2 => sw,
+		  seletor => in_en,
+		  saida => A_in
+	 );
+	 
+	 m5: mux2x1
+	 port map(
+		  entrada1 => B_wire,
+		  entrada2 => sw,
+		  seletor => in_en,
+		  saida => B_in
+	 );
+	 
+	 m6: mux2x1
+	 port map(
+		  entrada1 => R_wire,
+		  entrada2 => sw,
+		  seletor => in_en,
+		  saida => R_in
+	 );
+	 
+	 m7: mux4x1
+	 port map(
+		  entrada1 => A_out,
+		  entrada2 => B_out,
+		  entrada3 => R_out,
+		  entrada4 => "00000000",
+		  seletor => data_src,
+		  saida => MEM_data
+	 );
+	 
+	 m8: mux4x1
+	 port map(
+		  entrada1 => "00000000",
+		  entrada2 => B_out,
+		  entrada3 => R_out,
+		  entrada4 => MEM_out,
+		  seletor => A_src,
+		  saida => A_wire
+	 );
+	 
+	 m9: mux4x1
+	 port map(
+		  entrada1 => A_out,
+		  entrada2 => "00000000",
+		  entrada3 => R_out,
+		  entrada4 => MEM_out,
+		  seletor => B_src,
+		  saida => B_wire
+	 );
+	 
+	 m10: mux4x1
+	 port map(
+		  entrada1 => A_out,
+		  entrada2 => B_out,
+		  entrada3 => "00000000",
+		  entrada4 => MEM_out,
+		  seletor => R_src,
+		  saida => R_wire
+	 );
+	 
+	 m11: mux4x1
+	 port map(
+		  entrada1 => A_out,
+		  entrada2 => B_out,
+		  entrada3 => R_out,
+		  entrada4 => "00000000",
+		  seletor => alu_src1,
+		  saida => ULA_inA
+	 );
+	 
+	 m12: mux4x1
+	 port map(
+		  entrada1 => A_out,
+		  entrada2 => B_out,
+		  entrada3 => R_out,
+		  entrada4 => MEM_out,
+		  seletor => alu_src2,
+		  saida => ULA_inB
+	 );
+	 
+	 m13: mux4x1
+	 port map(
+		  entrada1 => A_out,
+		  entrada2 => B_out,
+		  entrada3 => R_out,
+		  entrada4 => "00000000",
+		  seletor => out_src,
+		  saida => out_in
+	 );
+	 
+	 m14: mux6x1
+	 port map(
+		  entrada1 => PC_out,
+		  entrada2 => A_out,
+		  entrada3 => B_out,
+		  entrada4 => R_out,
+		  entrada5 => MEM_out,
+		  entrada6 => IR_out,
+		  seletor => add_src,
+		  saida => MEM_address
+	 );
+	 
+	 d1: display
+    port map(S0 => IR_out(0),
+            S1 => IR_out(1),
+            S2 => IR_out(2),
+            S3 => IR_out(3),
+            P0 => q(0),
+            P1 => q(1),
+            P2 => q(2),
+            P3 => q(3),
+            P4 => q(4),
+            P5 => q(5),
+            P6 => q(6)
+    );
+
+    d2: display
+    port map(S0 => IR_out(4),
+            S1 => IR_out(5),
+            S2 => IR_out(6),
+            S3 => IR_out(7),
+            P0 => q(7),
+            P1 => q(8),
+            P2 => q(9),
+            P3 => q(10),
+            P4 => q(11),
+            P5 => q(12),
+            P6 => q(13)
+    );
 
     PC_add <= std_logic_vector(unsigned(PC_out)+1);
-    jump <= PC_add when jmp = '0' else IR_out;
-    jumpeq <= jump when jeq_and = '0' else IR_out;
-    jumpgr <= jumpeq when jgr_and = '0' else IR_out;
     jeq_and <= jeq and zero_out;
     jgr_and <= jgr and not sinal_out;
 
-    MEM_address <= PC_out when add_src = "000" else
-                    A_out when add_src = "001" else
-                    B_out when add_src = "010" else
-                    R_out when add_src = "011" else
-                  MEM_out when add_src = "100" else
-                   IR_out when add_src = "101" else
-                   "00000000";
-                   
-    MEM_data <= A_out when data_src = "00" else
-                B_out when data_src = "01" else
-                R_out when data_src = "10" else
-                "00000000";
-
-    A_wire <= B_out when A_src = "01" else
-              R_out when A_src = "10" else
-            MEM_out when A_src = "11" else
-         "00000000" when A_src = "00";
-
-    B_wire <= A_out when B_src = "00" else
-              R_out when B_src = "10" else
-            MEM_out when B_src = "11" else
-         "00000000" when B_src = "01";
-
-    R_wire <= A_out when R_src = "00" else
-              B_out when R_src = "01" else
-            MEM_out when R_src = "11" else
-            ULA_out when R_src = "10";
-
-    A_in <= A_wire when in_en = '0' else sw;
-    B_in <= B_wire when in_en = '0' else sw;
-    R_in <= R_wire when in_en = '0' else sw;
-
-    ULA_inA <= A_out when alu_src1 = "00" else
-               B_out when alu_src1 = "01" else
-               R_out when alu_src1 = "10" else
-               "00000000" when alu_src1 = "11";
-
-    ULA_inB <= A_out when alu_src2 = "00" else
-               B_out when alu_src2 = "01" else
-               R_out when alu_src2 = "10" else
-               MEM_out when alu_src2 = "11";
-    
-    out_in <= A_out when out_src = "00" else
-              B_out when out_src = "01" else
-              R_out when out_src = "10" else
-              "00000000";
 
     leds <= out_out;
+	 
+	 control_bus <= rst & load_pc & mem_write & add_src & data_src & 
+						load_ir & A_src & B_src & in_en & load_A & load_B & alu_src1 & alu_src2 & 
+						aluop & R_src & load_R & out_src & load_out & load_flag & jmp & jeq & jgr;
+	 
 end vamos_reprovar;
 ```
+Mux2x1:
+```VHDL
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux2x1 is
+    port(
+        entrada1: in std_logic_vector(7 downto 0);
+        entrada2: in std_logic_vector(7 downto 0);
+        seletor: in std_logic;
+        saida: out std_logic_vector(7 downto 0)
+    );
+end mux2x1;
+
+architecture behavior of mux2x1 is
+
+begin
+
+	process(seletor)
+	begin
+		if(seletor = '0') then
+			saida <= entrada1;
+		else
+			saida <= entrada2;
+		end if;
+	end process;
+
+end behavior;
+```
+
+Mux4x1
+```VHDL
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux4x1 is
+    port(
+        entrada1: in std_logic_vector(7 downto 0);
+        entrada2: in std_logic_vector(7 downto 0);
+        entrada3: in std_logic_vector(7 downto 0);
+        entrada4: in std_logic_vector(7 downto 0);
+        seletor: in std_logic_vector(1 downto 0);
+        saida: out std_logic_vector(7 downto 0)
+    );
+end mux4x1;
+
+architecture behavior of mux4x1 is
+
+begin
+
+	process(seletor)
+	begin
+		case(seletor) is
+			when "00" =>
+				saida <= entrada1;
+			when "01" =>
+				saida <= entrada2;
+			when "10" =>
+				saida <= entrada3;
+			when "11" =>
+				saida <= entrada4;
+		end case;
+	end process;
+
+end behavior;
+```
+
+Mux6x1:
+```VHDL
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux6x1 is
+    port(
+        entrada1: in std_logic_vector(7 downto 0);
+        entrada2: in std_logic_vector(7 downto 0);
+        entrada3: in std_logic_vector(7 downto 0);
+        entrada4: in std_logic_vector(7 downto 0);
+        entrada5: in std_logic_vector(7 downto 0);
+        entrada6: in std_logic_vector(7 downto 0);
+        seletor: in std_logic_vector(2 downto 0);
+        saida: out std_logic_vector(7 downto 0)
+    );
+end mux6x1;
+
+architecture behavior of mux6x1 is
+
+begin
+
+	process(seletor)
+	begin
+		case(seletor) is
+			when "000" =>
+				saida <= entrada1;
+			when "001" =>
+				saida <= entrada2;
+			when "010" =>
+				saida <= entrada3;
+			when "011" =>
+				saida <= entrada4;
+			when "100" =>
+				saida <= entrada5;
+			when "101" =>
+				saida <= entrada6;
+			when others =>
+				saida <= "00000000";
+		end case;
+	end process;
+
+end behavior;
+```
+
 Unidade de controle:
 ```vhdl
 library ieee;
