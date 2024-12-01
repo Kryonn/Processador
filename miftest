@@ -145,9 +145,17 @@ ADDRESS_RADIX = HEX;
 DATA_RADIX = BIN;
 CONTENT
 BEGIN
-0 : 11000000 ; -- IN in A
-1 : 10100001 ; -- STORE A store imm
-2 : 00000011 ; -- STORE imm
+0 : 11000100 ; -- IN in B
+1 : 11001000 ; -- IN in R
+2 : 10100111 ; -- STORE B store imm
+3 : 00000100 ; -- STORE imm
+5 : 11001000 ; -- IN in R
+6 : 10101011 ; -- STORE R store imm
+7 : 00001000 ; -- STORE imm
+9 : 11000000 ; -- IN in A
+A : 11000100 ; -- IN in B
+B : 10100100 ; -- STORE A store B
+
 
 END;
 
