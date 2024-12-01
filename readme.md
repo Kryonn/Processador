@@ -43,14 +43,14 @@ Códigos das instruções:
 
 Como a memória possui 8 bits de endereçamento e cada dado também possui 8 bits, em instruções que envolvem valores imediatos, é necessário usar duas instruções.
 
-### Componentes
+## Componentes
 
 O processador é composto por quatro tipos de componentes:
 
-#### Registradores
+### Registradores
 Responsável por armazenar valores temporários.
 
-##### Resgistrador de 8 bits
+#### Resgistrador de 8 bits
 ```VHDL
 library ieee;
 use ieee.std_logic_1164.all;
@@ -82,7 +82,7 @@ end behavior;
 ```
 São, no total, seis registradores de 8 bits, sendo eles: PC, IR, RegA, RegB, RegR, RegOut. 
 
-##### Registrador de 1 bit
+#### Registrador de 1 bit
 ```VHDL
 library ieee;
 use ieee.std_logic_1164.all;
@@ -114,10 +114,10 @@ end behavior;
 ```
 São, no total, quatro registradores de 1 bit, sendo eles: Zero, Over, Sinal e Carry.
 
-#### Memória
+### Memória
 Responsável por armazenar as instruções e dados. O processador possui apenas uma memória(RAM).
 
-##### Memória 256x8
+#### Memória 256x8
 ```VHDL
 library ieee;
 use ieee.std_logic_1164.all;
@@ -152,10 +152,10 @@ begin
 end be;
 ```
 
-#### ULA
+### ULA
 Responsável por realizar as operações aritméticas e lógicas.
 
-##### Ula
+#### Ula
 ```VHDL
 library ieee;
 use ieee.std_logic_1164.all;
@@ -241,11 +241,11 @@ begin
 end behavior;
 ```
 
-#### Unidade de controle
+### Unidade de controle
 Responsável por coordenar as ações do processador.
 
 
-### Integração
+## Integração
 Para o bom funcionamento do processador, decidimos usar a seguinte arquitetura:
 ![null](https://github.com/user-attachments/assets/9efb6f72-fafb-44a1-8fd0-5659a790e3ca)
 
@@ -330,7 +330,7 @@ Estados
 link whiteboard com o circuito:
 https://wbd.ms/share/v2/aHR0cHM6Ly93aGl0ZWJvYXJkLm1pY3Jvc29mdC5jb20vYXBpL3YxLjAvd2hpdGVib2FyZHMvcmVkZWVtLzczMDI5MGVlYzI2NjQxOThiZDFlMWZjNzA1MGM5Yzk2X0JCQTcxNzYyLTEyRTAtNDJFMS1CMzI0LTVCMTMxRjQyNEUzRF84MTUzNmViNy02MGQ1LTQ3ZmEtYWU5Mi0zZDYwMDk1NWExMDA=
 
-Sinais de controle
+### Sinais de controle
 ```VHDL
 rst <= '0'
 load_pc <= '0'
@@ -356,7 +356,7 @@ jmp <= '0'
 jeq <= '0'
 jgr <= '0'
 ```
-Código principal:
+### Código principal:
 ```vhdl
 library ieee;
 use ieee.std_logic_1164.all;
@@ -820,7 +820,7 @@ begin
 	 
 end vamos_reprovar;
 ```
-Mux2x1:
+### Mux2x1:
 ```VHDL
 library ieee;
 use ieee.std_logic_1164.all;
@@ -850,7 +850,7 @@ begin
 end behavior;
 ```
 
-Mux4x1
+### Mux4x1
 ```VHDL
 library ieee;
 use ieee.std_logic_1164.all;
@@ -887,7 +887,7 @@ begin
 end behavior;
 ```
 
-Mux6x1:
+### Mux6x1:
 ```VHDL
 library ieee;
 use ieee.std_logic_1164.all;
@@ -932,7 +932,7 @@ begin
 end behavior;
 ```
 
-Unidade de controle:
+### Unidade de controle:
 ```vhdl
 library ieee;
 use ieee.std_logic_1164.all;
@@ -1813,7 +1813,7 @@ begin
 
 end be;
 ```
-Unidade de controle
+### Unidade de controle
 
 ```VHDL
 library ieee;
@@ -2686,7 +2686,7 @@ begin
 end be;
 ```
 
-ULA
+### ULA
 ```VHDL
 library ieee;
 use ieee.std_logic_1164.all;
@@ -2913,7 +2913,7 @@ begin
 end behavior;
 ```
 
-PC Reg
+### PC Reg
 
 ```VHDL
 library ieee;
@@ -2947,7 +2947,7 @@ begin
 end behavior;
 ```
 
-Reg
+### Reg
 
 
 ```VHDL
@@ -2980,7 +2980,7 @@ begin
 end behavior;
 ```
 
-Flag reg
+### Flag reg
 
 ```VHDL
 library ieee;
