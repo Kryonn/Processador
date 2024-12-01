@@ -153,9 +153,6 @@ end be;
 ```
 
 ### ULA
-Responsável por realizar as operações aritméticas e lógicas.
-
-#### Ula
 A **Unidade Lógica e Aritmética (ULA)** é um componente fundamental da CPU, responsável por realizar operações matemáticas (como adição e subtração) e lógicas (como comparações e operações AND/OR). Ela recebe os dados dos registradores, executa os cálculos ou decisões lógicas e retorna os resultados para serem armazenados ou utilizados em outras instruções. Essencial para a execução de tarefas computacionais, a ULA é o núcleo onde os dados brutos se transformam em informações úteis no processamento.
 
 ```VHDL
