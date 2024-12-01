@@ -146,7 +146,7 @@ DATA_RADIX = BIN;
 CONTENT
 BEGIN
 0 : 11000100 ; -- IN in B
-1 : 10100100 : -- STORE B store A
+1 : 10100001 : -- STORE B store A
 2 : 11010000 ; -- OUT out A
 3 : 11100000 ; -- WAIT 
 
