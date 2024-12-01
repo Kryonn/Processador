@@ -48,7 +48,7 @@ Como a memória possui 8 bits de endereçamento e cada dado também possui 8 bit
 O processador é composto por quatro tipos de componentes:
 
 ### Registradores
-Responsável por armazenar valores temporários.
+Um **registrador** é um pequeno e rápido espaço de armazenamento dentro da CPU, usado para guardar temporariamente dados e instruções em processamento. Ele acelera as operações ao fornecer acesso imediato à ALU, armazenar resultados intermediários e controlar o fluxo de execução com funções específicas, como manter o endereço da próxima instrução ou operar diretamente sobre operandos. Essencial para o desempenho do processador, os registradores minimizam a dependência da memória principal e garantem eficiência nas operações computacionais.
 
 #### Resgistrador de 8 bits
 ```VHDL
@@ -115,7 +115,7 @@ end behavior;
 São, no total, quatro registradores de 1 bit, sendo eles: Zero, Over, Sinal e Carry.
 
 ### Memória
-Responsável por armazenar as instruções e dados. O processador possui apenas uma memória(RAM).
+A **memória** de um computador é o componente responsável por armazenar dados e instruções que serão processados pela CPU. Ela pode ser dividida em níveis, como memória principal (RAM), usada para acesso rápido e temporário durante a execução de programas, e armazenamento secundário (HD ou SSD), que guarda informações de forma permanente. A memória fornece os dados que o processador necessita para realizar operações, sendo essencial para o funcionamento do sistema, pois conecta o armazenamento mais lento ao processamento rápido, garantindo acesso eficiente às informações. O processador possui apenas uma memória(RAM).
 
 #### Memória 256x8
 ```VHDL
@@ -156,6 +156,8 @@ end be;
 Responsável por realizar as operações aritméticas e lógicas.
 
 #### Ula
+A **Unidade Lógica e Aritmética (ULA)** é um componente fundamental da CPU, responsável por realizar operações matemáticas (como adição e subtração) e lógicas (como comparações e operações AND/OR). Ela recebe os dados dos registradores, executa os cálculos ou decisões lógicas e retorna os resultados para serem armazenados ou utilizados em outras instruções. Essencial para a execução de tarefas computacionais, a ULA é o núcleo onde os dados brutos se transformam em informações úteis no processamento.
+
 ```VHDL
 library ieee;
 use ieee.std_logic_1164.all;
@@ -242,7 +244,7 @@ end behavior;
 ```
 
 ### Unidade de controle
-Responsável por coordenar as ações do processador.
+A **Unidade de Controle (UC)** é o componente da CPU responsável por coordenar e gerenciar todas as operações do processador. Ela interpreta as instruções de um programa, controla o fluxo de dados entre a memória, a ULA e os registradores, e garante que as operações sejam executadas na ordem correta. A UC emite sinais de controle para ativar os componentes apropriados e sincroniza as atividades do sistema, garantindo o funcionamento eficiente e ordenado do processamento. Responsável por coordenar as ações do processador.
 
 
 ## Integração
