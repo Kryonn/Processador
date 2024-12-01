@@ -246,6 +246,13 @@ Responsável por coordenar as ações do processador.
 
 
 ## Integração
+
+A integração dos componentes de um processador em VHDL é uma etapa crucial para garantir que todas as unidades funcionem em harmonia, permitindo a execução correta das instruções. Cada componente, como a Unidade de Controle (UC), a Unidade Lógica e Aritmética (ULA) e a Memória, desempenha um papel específico no ciclo de instruções. A seguir tem-se um diagrama básico da configuração geral de um Processador, com seus componentes internos: 
+
+<p align="center">
+  <img src="img/Diagrama-Componentes.png" alt="Componentes-Internos" width="500">
+</p>
+
 Para o bom funcionamento do processador, decidimos usar a seguinte arquitetura:
 ![null](https://github.com/user-attachments/assets/9efb6f72-fafb-44a1-8fd0-5659a790e3ca)
 
