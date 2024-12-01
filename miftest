@@ -1,4 +1,6 @@
 
+## TESTE ULA ##
+
 DEPTH = 256;
 WIDTH = 8;
 ADDRESS_RADIX = HEX;
@@ -33,6 +35,8 @@ F : 00000011; -- ADD A + imm
 
 END;
 
+
+## TESTE JEQ ##
 
 DEPTH = 256;
 WIDTH = 8;
@@ -72,6 +76,8 @@ F : 00000011; -- ADD A + imm
 
 END;
 
+
+## TESTE JGR ##
 
 DEPTH = 256;
 WIDTH = 8;
@@ -128,5 +134,22 @@ BEGIN
 END;
 
 
+
+
+## TESTE OUT ##
+
+
+DEPTH = 256;
+WIDTH = 8;
+ADDRESS_RADIX = HEX;
+DATA_RADIX = BIN;
+CONTENT
+BEGIN
+0 : 11000100 ; -- IN in B
+1 : 10100100 : -- STORE B store A
+2 : 11010000 ; -- OUT out A
+3 : 11100000 ; -- WAIT 
+
+END;
 
 
