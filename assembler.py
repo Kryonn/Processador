@@ -99,8 +99,6 @@ def assembly_to_binary(assembly_code):
 
             elif instruction in ["JMP", "JEQ", "JGR"]:
                 addr_decimal = labels.get(parts[1], 0)
-                print(addr_decimal)
-                print(offset_correction)
                 offset_correction = count_immediate_instructions(lines, parts[1])  # Conta até o jump
                 addr_decimal += offset_correction   # Adiciona o offset de saltos e o endereço atual
 
