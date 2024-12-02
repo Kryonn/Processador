@@ -193,7 +193,7 @@ DATA_RADIX = BIN;
 CONTENT
 BEGIN
 0 : 00000001; -- ADD A add B
-1 : 10011000 ; -- LOAD R 
+1 : 10011011 ; -- LOAD R 
 2 : 00000000 ; -- LOAD endereço
 
 
