@@ -2671,7 +2671,7 @@ architecture vamos_reprovar of processador is
     component controle
         port(inst: in std_logic_vector(7 downto 0);
               clk: in std_logic;    
-				  estado: out std_logic_vector(4 downto 0);
+				  estado: out std_logic_vector(6 downto 0);
       control_bus: out std_logic_vector(32 downto 0));
     end component;
 
@@ -2730,7 +2730,7 @@ architecture vamos_reprovar of processador is
     signal out_src, A_src, B_src, R_src, alu_src1, alu_src2, data_src: std_logic_vector(1 downto 0);
     signal add_src, aluop: std_logic_vector(2 downto 0);
 	 signal control_bus: std_logic_vector(32 downto 0);
-	 signal estado: std_logic_vector(4 downto 0);
+	 signal estado: std_logic_vector(6 downto 0);
 begin
 
     mem: Memoria
@@ -2968,12 +2968,12 @@ begin
 	 
 	 m14: mux6x1
 	 port map(
-		  entrada1 => PC_out,
-		  entrada2 => A_out,
-		  entrada3 => B_out,
-		  entrada4 => R_out,
-		  entrada5 => MEM_out,
-		  entrada6 => IR_out,
+		  entrada1 => A_out,
+		  entrada2 => B_out,
+		  entrada3 => R_out,
+		  entrada4 => MEM_out,
+		  entrada5 => IR_out,
+		  entrada6 => PC_out,
 		  seletor => add_src,
 		  saida => MEM_address
 	 );
@@ -3038,8 +3038,8 @@ begin
 	 
 	 d5: display
     port map(S0 => estado(4),
-            S1 => '0',
-            S2 => '0',
+            S1 => estado(5),
+            S2 => estado(6),
             S3 => '0',
             P0 => u(0),
             P1 => u(1),
