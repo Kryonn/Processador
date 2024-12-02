@@ -243,11 +243,11 @@ end behavior;
 ### Unidade de controle
 A **Unidade de Controle (UC)** é o componente da CPU responsável por coordenar e gerenciar todas as operações do processador. Ela interpreta as instruções de um programa, controla o fluxo de dados entre a memória, a ULA e os registradores, e garante que as operações sejam executadas na ordem correta. A UC emite sinais de controle para ativar os componentes apropriados e sincroniza as atividades do sistema, garantindo o funcionamento eficiente e ordenado do processamento. Responsável por coordenar as ações do processador.
 ```VHDL
-Oi eu sou Pablo
-Meu nome é Tyrone
-Eu sou a Uniqua
-Eu sou a Tasha
-E meu nome é Austin
+	Oi eu sou Pablo
+	Meu nome é Tyrone
+	Eu sou a Uniqua
+	Eu sou a Tasha
+	E meu nome é Austin
 ```
 
 ## Integração
@@ -320,10 +320,6 @@ No caso do processador, os estados descritos correspondem às fases de execuçã
 |store_dec         |0|0|0|0|0|000|00|0|00|00|0|0|0|    00     |    00     |    000    |00|0|0|0|0|0|00|0|0|0|0|
 |store_exec_A      |0|0|0|0|0|000|00|0|00|00|0|0|0|    00     |    00     |    000    |00|0|0|0|0|0|00|0|0|0|0|
 |Pc                |0|1|0|0|1|000|00|0|00|00|0|0|0|    00     |    00     |    000    |00|0|0|0|0|0|00|0|0|0|0|
-
-
-### Link para o circuito no Whiteboard  
-[Clique aqui para acessar o circuito no Whiteboard](https://wbd.ms/share/v2/aHR0cHM6Ly93aGl0ZWJvYXJkLm1pY3Jvc29mdC5jb20vYXBpL3YxLjAvd2hpdGVib2FyZHMvcmVkZWVtLzczMDI5MGVlYzI2NjQxOThiZDFlMWZjNzA1MGM5Yzk2X0JCQTcxNzYyLTEyRTAtNDJFMS1CMzI0LTVCMTMxRjQyNEUzRF84MTUzNmViNy02MGQ1LTQ3ZmEtYWU5Mi0zZDYwMDk1NWExMDA=)
 
 
 ### Sinais de controle
