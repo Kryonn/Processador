@@ -174,3 +174,40 @@ WAIT
 
 binary_program = assembly_to_binary(assembly_program)
 generate_mif(binary_program, "program.mif")
+
+
+
+
+
+
+
+
+
+
+DEPTH = 256;
+WIDTH = 8;
+ADDRESS_RADIX = HEX;
+DATA_RADIX = BIN;
+CONTENT
+BEGIN
+ 0 : 11000000; -- IN A
+ 1 : 11000100; -- IN B
+ 2 : 10111011; -- MOV R, 0
+ 3 : 00000000; -- endereço (0)
+ 4 : 01010111; -- CMP B, 0
+ 5 : 00000000; -- endereço (0)
+ 6 : 01110000; -- JEQ END_LOOP
+ 7 : 00010010; -- endereço (12)
+ 8 : 00001000; -- ADD R, A
+ 9 : 10101011; -- STORE R, 255
+ A : 11111111; -- endereço (FF)
+ B : 00010111; -- SUB B, 1
+ C : 00000001; -- endereço (1)
+ D : 10110110; -- MOV B, R
+ E : 10011011; -- LOAD R, 255
+ F : 11111111; -- endereço (FF)
+ 10 : 01100000; -- JMP LOOP_START
+ 11 : 00000100; -- endereço (3)
+ 12 : 11011000; -- OUT R
+ 13 : 11100000; -- WAIT
+END;
