@@ -61,56 +61,63 @@ def assembly_to_binary(assembly_code):
             if instruction == "IN":
                 reg1 = register_set.get(parts[1], "00")
                 binary_line = f"{opcode}{reg1}00"
-                binary_code[line_counter] = f"{binary_line} -- {line}"
+                binary_code[line_counter] = f"{binary_line}; -- {line}"
             
             elif instruction == "MOV":
                 if parts[2] == "0":
                     reg1 = register_set.get(parts[1], "00")
                     binary_line = f"{opcode}{reg1}00"
-                    binary_code[line_counter] = f"{binary_line} -- {line}"
+                    binary_code[line_counter] = f"{binary_line}; -- {line}"
                 else:
                     reg1 = register_set.get(parts[1], "00")
                     reg2 = register_set.get(parts[2], "00")
                     binary_line = f"{opcode}{reg1}{reg2}"
-                    binary_code[line_counter] = f"{binary_line} -- {line}"
+                    binary_code[line_counter] = f"{binary_line}; -- {line}"
             
             elif instruction in ["CMP", "ADD", "SUB"]:
                 reg1 = register_set.get(parts[1], "00")
-                reg2 = register_set.get(parts[2], "00")
-                binary_line = f"{opcode}{reg1}{reg2}"
-                binary_code[line_counter] = f"{binary_line} -- {line}"
+                if parts[2].isdigit():
+                    value = int(parts[2])
+                    binary_line = f"{opcode}{reg1}11"  # Define bits iniciais como `11` para indicar valor imediato
+                    binary_code[line_counter] = f"{binary_line}; -- {line}"
+                    line_counter += 1
+                    binary_code[line_counter] = f"{value:08b}; -- endereço"
+                else:
+                    reg2 = register_set.get(parts[2], "00")
+                    binary_line = f"{opcode}{reg1}{reg2}"
+                    binary_code[line_counter] = f"{binary_line}; -- {line}"
             
             elif instruction in ["JMP", "JEQ"]:
                 addr = format(labels.get(parts[1], 0), '08b')
                 binary_line = f"{opcode}0000"
-                binary_code[line_counter] = f"{binary_line} -- {line}"
-                binary_code[line_counter + 1] = f"{addr} -- endereço"
+                binary_code[line_counter] = f"{binary_line}; -- {line}"
                 line_counter += 1
+                binary_code[line_counter] = f"{addr}; -- endereço"
             
             elif instruction == "STORE":
                 reg1 = register_set.get(parts[1], "00")
                 addr = format(int(parts[2]), '08b')
                 binary_line = f"{opcode}{reg1}00"
-                binary_code[line_counter] = f"{binary_line} -- {line}"
-                binary_code[line_counter + 1] = f"{addr} -- endereço"
+                binary_code[line_counter] = f"{binary_line}; -- {line}"
                 line_counter += 1
+                binary_code[line_counter] = f"{addr}; -- endereço"
             
             elif instruction == "LOAD":
                 reg1 = register_set.get(parts[1], "00")
                 addr = format(int(parts[2]), '08b')
                 binary_line = f"{opcode}{reg1}00"
-                binary_code[line_counter] = f"{binary_line} -- {line}"
-                binary_code[line_counter + 1] = f"{addr} -- endereço"
+                binary_code[line_counter] = f"{binary_line}; -- {line}"
                 line_counter += 1
+                binary_code[line_counter] = f"{addr}; -- endereço"
             
             elif instruction == "OUT":
                 reg1 = register_set.get(parts[1], "00")
                 binary_line = f"{opcode}{reg1}00"
-                binary_code[line_counter] = f"{binary_line} -- {line}"
+                binary_code[line_counter] = f"{binary_line}; -- {line}"
             
             elif instruction == "WAIT":
                 binary_line = f"{opcode}0000"
-                binary_code[line_counter] = f"{binary_line} -- {line}"
+                binary_code[line_counter] = f"{binary_line}; -- {line}"
             
             else:
                 continue
@@ -135,9 +142,8 @@ def generate_mif(binary_code, file_name="program.mif"):
         mif_file.write("BEGIN\n")
         
         for address, binary_line in binary_code.items():
-            hex_address = format(address, 'X')
-            code, comment = binary_line.split(' -- ')
-            mif_file.write(f" {hex_address} : {code}; {comment}\n")
+            hex_address = format(address, 'X').upper()
+            mif_file.write(f" {hex_address} : {binary_line}\n")
         
         mif_file.write("END;\n")
     print(f"Arquivo .mif gerado: {file_name}")
@@ -146,19 +152,17 @@ def generate_mif(binary_code, file_name="program.mif"):
 assembly_program = """
 IN A
 IN B
-MOV R 0
-STORE R 255
-MOV R A
-LOOP_START
-SUB R B
-MOV A R
-LOAD R 255
-ADD R 1
-STORE R 255
-MOV R A
-CMP R B
-JGR LOOP_START
-LOAD R 255
+MOV R, 0
+LOOP_START:
+CMP B, 0
+JEQ END_LOOP
+ADD R, A
+STORE R, 255
+SUB B, 1
+MOV B, R
+LOAD R, 255
+JMP LOOP_START
+END_LOOP:
 OUT R
 WAIT
 """
