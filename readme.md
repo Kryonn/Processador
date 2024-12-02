@@ -243,7 +243,11 @@ end behavior;
 ### Unidade de controle
 A **Unidade de Controle (UC)** é o componente da CPU responsável por coordenar e gerenciar todas as operações do processador. Ela interpreta as instruções de um programa, controla o fluxo de dados entre a memória, a ULA e os registradores, e garante que as operações sejam executadas na ordem correta. A UC emite sinais de controle para ativar os componentes apropriados e sincroniza as atividades do sistema, garantindo o funcionamento eficiente e ordenado do processamento. Responsável por coordenar as ações do processador.
 
- ![Diagrama_Estados](https://github.com/user-attachments/assets/5e466e64-24ec-4cef-8eb4-63da017ca367)
+<p align="center">
+  <img src="img/Diagrama-Estados.png" alt="Diagrama-de-Esstados">
+  Para melhor visualização acesse: 
+  <a href="https://drive.google.com/file/d/11Zxj_0tHRWVD6FPvLziwXUbgvCiHPgzR/view?usp=sharing">Diagrama_de_Estados</a>
+</p>
 
 
 | Estado | rst | load_pc | mem_write | add_src | data_src | load_ir | A_src | B_src | in_en | load_A | load_B | alu_src1 | alu_src2 | aluop | R_src | load_R | out_src | load_out | load_flag | jmp | jeq | jgr 
@@ -2491,7 +2495,7 @@ end be;
 A integração dos componentes de um processador em VHDL é uma etapa crucial para garantir que todas as unidades funcionem em harmonia, permitindo a execução correta das instruções. Cada componente, como a Unidade de Controle (UC), a Unidade Lógica e Aritmética (ULA) e a Memória, desempenham um papel específico no ciclo de instruções. A seguir tem-se um diagrama básico da configuração geral de um Processador, com seus componentes internos: 
 
 <p align="center">
-  <img src="img/Diagrama-Componentes.png" alt="Componentes-Internos" width="500">
+  <img src="img/Diagrama-Componentes.png" alt="Componentes-Internos">
 </p>
 
 Para o bom funcionamento do processador, decidimos usar a seguinte arquitetura:
