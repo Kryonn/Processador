@@ -67,10 +67,10 @@ def assembly_to_binary(assembly_code):
                 reg1 = register_set.get(parts[1], "00")
                 if parts[2].isdigit():
                     value = int(parts[2])
-                    binary_line = f"{opcode}{reg1}11"  # Define bits iniciais como `11` para indicar valor imediato
+                    binary_line = f"{opcode}{reg1}11"
                     binary_code[line_counter] = f"{binary_line}; -- {line}"
                     line_counter += 1
-                    binary_code[line_counter] = f"{value:08b}; -- endereço"
+                    binary_code[line_counter] = f"{value:08b}; -- endereço ({value:X})"
                 else:
                     reg2 = register_set.get(parts[2], "00")
                     binary_line = f"{opcode}{reg1}{reg2}"
@@ -80,37 +80,40 @@ def assembly_to_binary(assembly_code):
                 reg1 = register_set.get(parts[1], "00")
                 if parts[2].isdigit():
                     value = int(parts[2])
-                    binary_line = f"{opcode}{reg1}11"  # Define bits iniciais como `11` para indicar valor imediato
+                    binary_line = f"{opcode}{reg1}11"
                     binary_code[line_counter] = f"{binary_line}; -- {line}"
                     line_counter += 1
-                    binary_code[line_counter] = f"{value:08b}; -- endereço"
+                    binary_code[line_counter] = f"{value:08b}; -- endereço ({value:X})"
                 else:
                     reg2 = register_set.get(parts[2], "00")
                     binary_line = f"{opcode}{reg1}{reg2}"
                     binary_code[line_counter] = f"{binary_line}; -- {line}"
             
             elif instruction in ["JMP", "JEQ"]:
-                addr = format(labels.get(parts[1], 0), '08b')
+                addr_decimal = labels.get(parts[1], 0)
+                addr_bin = format(addr_decimal, '08b')
+                addr_hex = format(addr_decimal, 'X').upper()
                 binary_line = f"{opcode}0000"
                 binary_code[line_counter] = f"{binary_line}; -- {line}"
                 line_counter += 1
-                binary_code[line_counter] = f"{addr}; -- endereço"
+                binary_code[line_counter] = f"{addr_bin}; -- endereço ({addr_hex})"
             
-            elif instruction == "STORE":
+            elif instruction in ["STORE", "LOAD"]:
                 reg1 = register_set.get(parts[1], "00")
-                addr = format(int(parts[2]), '08b')
-                binary_line = f"{opcode}{reg1}00"
-                binary_code[line_counter] = f"{binary_line}; -- {line}"
-                line_counter += 1
-                binary_code[line_counter] = f"{addr}; -- endereço"
-            
-            elif instruction == "LOAD":
-                reg1 = register_set.get(parts[1], "00")
-                addr = format(int(parts[2]), '08b')
-                binary_line = f"{opcode}{reg1}00"
-                binary_code[line_counter] = f"{binary_line}; -- {line}"
-                line_counter += 1
-                binary_code[line_counter] = f"{addr}; -- endereço"
+                if parts[2].isdigit():
+                    addr = int(parts[2])
+                    addr_bin = format(addr, '08b')
+                    binary_line = f"{opcode}{reg1}11"  # Define os dois primeiros bits como `11`
+                    binary_code[line_counter] = f"{binary_line}; -- {line}"
+                    line_counter += 1
+                    binary_code[line_counter] = f"{addr_bin}; -- endereço ({addr:X})"
+                else:
+                    addr = int(parts[2], 16)
+                    addr_bin = format(addr, '08b')
+                    binary_line = f"{opcode}{reg1}00"
+                    binary_code[line_counter] = f"{binary_line}; -- {line}"
+                    line_counter += 1
+                    binary_code[line_counter] = f"{addr_bin}; -- endereço ({addr:X})"
             
             elif instruction == "OUT":
                 reg1 = register_set.get(parts[1], "00")
