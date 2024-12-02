@@ -4,25 +4,28 @@ ADDRESS_RADIX = HEX;
 DATA_RADIX = BIN;
 CONTENT
 BEGIN
- 0 : 11000000; IN A
- 1 : 11000100; IN B
- 2 : 10111000; MOV R, 0
- 3 : 01010100; CMP B, 0
- 4 : 01110000; JEQ END_LOOP
- 5 : 00010000; endereço
- 6 : 00001000; ADD R, A
- 7 : 10101011; STORE R, 255
- 8 : 11111111; endereço
- 9 : 00010111; SUB B, 1
- A : 00000001; endereço
- B : 10110110; MOV B, R
- C : 10011011; LOAD R, 255
- D : 11111111; endereço
- E : 01100000; JMP LOOP_START
- F : 00000011; endereço
- 10 : 11011000; OUT R
- 11 : 11100000; WAIT
+ 0 : 11000000; -- IN A
+ 1 : 11000100; -- IN B
+ 2 : 10111011; -- MOV R, 0
+ 3 : 00000000; -- endereço
+ 4 : 01010111; -- CMP B, 0
+ 5 : 00000000; -- endereço
+ 6 : 01110000; -- JEQ END_LOOP
+ 7 : 00001100; -- endereço
+ 8 : 00001000; -- ADD R, A
+ 9 : 10101000; -- STORE R, 255
+ A : 11111111; -- endereço
+ B : 00010111; -- SUB B, 1
+ C : 00000001; -- endereço
+ D : 10110110; -- MOV B, R
+ E : 10011000; -- LOAD R, 255
+ F : 11111111; -- endereço
+ 10 : 01100000; -- JMP LOOP_START
+ 11 : 00000100; -- endereço
+ 12 : 11011000; -- OUT R
+ 13 : 11100000; -- WAIT
 END;
+
 
 
 
