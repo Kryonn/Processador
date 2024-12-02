@@ -178,3 +178,24 @@ BEGIN
 5 : 10111100 ; -- MOV A para R
 
 END;
+
+
+
+
+
+## TESTE LOAD ##
+
+
+DEPTH = 256;
+WIDTH = 8;
+ADDRESS_RADIX = HEX;
+DATA_RADIX = BIN;
+CONTENT
+BEGIN
+0 : 00000001; -- ADD A add B
+1 : 10011000 ; -- LOAD R 
+2 : 00000000 ; -- LOAD endereço
+
+
+
+END;
