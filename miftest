@@ -13,14 +13,14 @@ BEGIN
  6 : 01110000; -- JEQ END_LOOP
  7 : 00001100; -- endereço
  8 : 00001000; -- ADD R, A
- 9 : 10101000; -- STORE R, 255
+ 9 : 10101011; -- STORE R, 255
  A : 11111111; -- endereço
  B : 00010111; -- SUB B, 1
  C : 00000001; -- endereço
  D : 10110110; -- MOV B, R
- E : 10011000; -- LOAD R, 255
+ E : 10011011; -- LOAD R, 255
  F : 11111111; -- endereço
- 10 : 01100000; -- JMP LOOP_START
+ 10 : 01100011; -- JMP LOOP_START
  11 : 00000100; -- endereço
  12 : 11011000; -- OUT R
  13 : 11100000; -- WAIT
