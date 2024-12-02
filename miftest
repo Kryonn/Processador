@@ -171,10 +171,10 @@ DATA_RADIX = BIN;
 CONTENT
 BEGIN
 0 : 11000100 ; -- IN in B
-1 : 10110001 ; -- MUV B para A
-2 : 10111000 ; -- MUV A para R
-3 : 10111100 ; -- MUV A para imm
-4 : 00000001 ; -- MUV imm
-5 : 10111100 ; -- MUV A para R
+1 : 10110001 ; -- MOV B para A
+2 : 10111000 ; -- MOV A para R
+3 : 10111100 ; -- MOV A para imm
+4 : 00000001 ; -- MOV imm
+5 : 10111100 ; -- MOV A para R
 
 END;
