@@ -248,6 +248,11 @@ A **Unidade de Controle (UC)** é o componente da CPU responsável por coordenar
 	Eu sou a Uniqua
 	Eu sou a Tasha
 	E meu nome é Austin
+	
+	E nós somos
+	Seus amiguinhos os Backyardigans
+	Juntos nós somos
+	Os Backyardigans
 ```
 
 ## Integração
