@@ -11,7 +11,7 @@ BEGIN
  4 : 01010111; -- CMP B, 0
  5 : 00000000; -- endereço
  6 : 01110000; -- JEQ END_LOOP
- 7 : 00001100; -- endereço
+ 7 : 00010010; -- endereço
  8 : 00001000; -- ADD R, A
  9 : 10101011; -- STORE R, 255
  A : 11111111; -- endereço
