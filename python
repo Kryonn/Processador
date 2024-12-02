@@ -64,12 +64,14 @@ def assembly_to_binary(assembly_code):
                 binary_code[line_counter] = f"{binary_line}; -- {line}"
             
             elif instruction == "MOV":
-                if parts[2] == "0":
-                    reg1 = register_set.get(parts[1], "00")
-                    binary_line = f"{opcode}{reg1}00"
+                reg1 = register_set.get(parts[1], "00")
+                if parts[2].isdigit():
+                    value = int(parts[2])
+                    binary_line = f"{opcode}{reg1}11"  # Define bits iniciais como `11` para indicar valor imediato
                     binary_code[line_counter] = f"{binary_line}; -- {line}"
+                    line_counter += 1
+                    binary_code[line_counter] = f"{value:08b}; -- endereço"
                 else:
-                    reg1 = register_set.get(parts[1], "00")
                     reg2 = register_set.get(parts[2], "00")
                     binary_line = f"{opcode}{reg1}{reg2}"
                     binary_code[line_counter] = f"{binary_line}; -- {line}"
