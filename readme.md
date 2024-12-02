@@ -258,6 +258,9 @@ Para o bom funcionamento do processador, decidimos usar a seguinte arquitetura:
 
 
 ### Estados
+Os estados representam diferentes etapas ou condições que o circuito pode assumir durante sua operação. Cada estado define um conjunto específico de ações que são realizadas em resposta a entradas ou eventos, guiando o funcionamento da máquina de forma sequencial e controlada.
+
+No caso do processador, os estados descritos correspondem às fases de execução das instruções:
 
 * Ini: zera os registradores
 * Busca: leitura da memória e escrita no IR
