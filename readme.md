@@ -325,6 +325,8 @@ No processador seguimos o seguinte diagrama de estados:
 
 
 ### Código principal:
+O código principal integra todos os componentes do processador, coordenando suas interações de forma eficiente. Ele gerencia o ciclo de execução das instruções, controlando a sequência de operações entre a Unidade de Controle (UC), a Unidade Lógica e Aritmética (ULA), os registradores e a memória. Essa integração assegura que cada parte do processador funcione em harmonia, desde a busca e decodificação das instruções até a execução e atualização do estado do sistema, garantindo o processamento correto e otimizado dos dados.
+
 ```vhdl
 library ieee;
 use ieee.std_logic_1164.all;
@@ -788,6 +790,9 @@ begin
 	 
 end vamos_reprovar;
 ```
+### Multiplexadores:
+Os **multiplexadores (MUX)** são componentes fundamentais em circuitos digitais, especialmente em processadores, responsáveis por selecionar uma entrada de entre várias opções disponíveis e direcioná-la para uma saída. No contexto de um processador, os MUXs são usados para escolher qual dado ou sinal deve ser enviado para os registradores, unidades de controle, ou Unidade Lógica e Aritmética (ULA), com base nas condições ou na instrução em execução.
+
 ### Mux2x1:
 ```VHDL
 library ieee;
