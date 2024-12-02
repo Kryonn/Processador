@@ -45,10 +45,11 @@ Como a memória possui 8 bits de endereçamento e cada dado também possui 8 bit
 
 ## Componentes
 
-O processador é composto por quatro tipos de componentes:
+A arquitetura  do processador é composta por quatro elementos fundamentais: os registradores, que armazenam temporariamente dados e instruções; a memória, responsável por guardar informações de forma acessível ao processador; a unidade de controle, que coordena as operações e interpreta as instruções; e a Unidade Lógica e Aritmética (ULA), que executa cálculos matemáticos e operações lógicas.
 
 ### Registradores
 Um **registrador** é um pequeno e rápido espaço de armazenamento dentro da CPU, usado para guardar temporariamente dados e instruções em processamento. Ele acelera as operações ao fornecer acesso imediato à ALU, armazenar resultados intermediários e controlar o fluxo de execução com funções específicas, como manter o endereço da próxima instrução ou operar diretamente sobre operandos. Essencial para o desempenho do processador, os registradores minimizam a dependência da memória principal e garantem eficiência nas operações computacionais.
+No processador em construção, são implementados seis registradores de 8 bits, cada um com uma função específica: o PC (Program Counter) mantém o endereço da próxima instrução; o IR (Instruction Register) armazena a instrução em execução; os RegA e RegB operam diretamente sobre operandos; o RegR guarda resultados intermediários; e o RegOut gerencia a saída de dados. E ainda, quatro registradores de 1 bit, sendo eles: Zero, Over, Sinal e Carry.
 
 #### Resgistrador de 8 bits
 ```VHDL
@@ -80,7 +81,6 @@ begin
     data_out <= temp;
 end behavior;
 ```
-São, no total, seis registradores de 8 bits, sendo eles: PC, IR, RegA, RegB, RegR, RegOut. 
 
 #### Registrador de 1 bit
 ```VHDL
@@ -112,7 +112,6 @@ begin
     data_out <= temp;
 end behavior;
 ```
-São, no total, quatro registradores de 1 bit, sendo eles: Zero, Over, Sinal e Carry.
 
 ### Memória
 A **memória** de um computador é o componente responsável por armazenar dados e instruções que serão processados pela CPU. Ela pode ser dividida em níveis, como memória principal (RAM), usada para acesso rápido e temporário durante a execução de programas, e armazenamento secundário (HD ou SSD), que guarda informações de forma permanente. A memória fornece os dados que o processador necessita para realizar operações, sendo essencial para o funcionamento do sistema, pois conecta o armazenamento mais lento ao processamento rápido, garantindo acesso eficiente às informações. O processador possui apenas uma memória(RAM).
