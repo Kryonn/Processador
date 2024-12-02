@@ -249,8 +249,7 @@ use ieee.numeric_std.all;
 
 entity controle is
     port(inst: in std_logic_vector(7 downto 0);
-          clk: in std_logic;    
-       estado: out std_logic_vector(6 downto 0);
+          clk: in std_logic;
   control_bus: out std_logic_vector(32 downto 0));
 end entity;
 
@@ -267,8 +266,7 @@ architecture be of controle is
 						  STORE_exec_imm_A4, STORE_exec_imm_A5, STORE_exec_imm_B1, STORE_exec_imm_B2, STORE_exec_imm_B3, STORE_exec_imm_B4, STORE_exec_imm_B5,
 						  STORE_exec_imm_R1, STORE_exec_imm_R2, STORE_exec_imm_R3, STORE_exec_imm_R4, STORE_exec_imm_R5, MOV_exec_A, MOV_exec_B, MOV_exec_R,
 						  MOV_exec_imm_A1, MOV_exec_imm_A2, MOV_exec_imm_A3, MOV_exec_imm_B1, MOV_exec_imm_B2, MOV_exec_imm_B3, MOV_exec_imm_R1, MOV_exec_imm_R2, 
-						  MOV_exec_imm_R3,
-						  in_a, in_b, in_r, out1, wait1, Pc);
+						  MOV_exec_imm_R3, in_a, in_b, in_r, out1, wait1, Pc);
     signal cur_state: state := ini;
 	 signal next_state: state := ini;
 
@@ -282,92 +280,6 @@ begin
         if(rising_edge(clk)) then
             cur_state <= next_state;
         end if;
-        case(cur_state) is
-            when ini => estado <= "0000000";
-            when busca1 => estado <= "0000001";
-				when busca2 => estado <= "0000010";
-            when decode => estado <= "0000011";
-				when R_exec => estado <= "0000100";
-            when R_exec_imm1 => estado <= "0000101";
-				when R_exec_imm2 => estado <= "0000110";
-				when R_exec_imm3 => estado <= "0000111";
-				when CMP_exec => estado <= "0001000";
-				when CMP_exec_imm1 => estado <= "0001001";
-				when CMP_exec_imm2 => estado <= "0001010";
-				when CMP_exec_imm3 => estado <= "0001011";
-				when JMP_exec1 => estado <= "0001100";
-				when JMP_exec2 => estado <= "0001101";
-				when JMP_exec3 => estado <= "0001110";
-				when JMP_exec4 => estado <= "0001111";
-				when JEQ_exec1 => estado <= "0010000";
-				when JEQ_exec2 => estado <= "0010001";
-				when JEQ_exec3 => estado <= "0010010";
-				when JEQ_exec4 => estado <= "0010011";
-				when JGR_exec1 => estado <= "0010100";
-				when JGR_exec2 => estado <= "0010101";
-				when JGR_exec3 => estado <= "0010110";
-				when JGR_exec4 => estado <= "0010111";
-				when LOAD_exec_A1 => estado <= "0011000";
-				when LOAD_exec_A2 => estado <= "0011001";
-				when LOAD_exec_B1 => estado <= "0011010";
-				when LOAD_exec_B2 => estado <= "0011011";
-				when LOAD_exec_R1 => estado <= "0011100";
-				when LOAD_exec_R2 => estado <= "0011101";
-				when LOAD_exec_imm_A1 => estado <= "0011110";
-				when LOAD_exec_imm_A2 => estado <= "0011111";
-				when LOAD_exec_imm_A3 => estado <= "0100000";
-				when LOAD_exec_imm_A4 => estado <= "0100001";
-				when LOAD_exec_imm_A5 => estado <= "0100010";
-				when LOAD_exec_imm_A6 => estado <= "0100011";
-				when LOAD_exec_imm_B1 => estado <= "0100100";
-				when LOAD_exec_imm_B2 => estado <= "0100101";
-				when LOAD_exec_imm_B3 => estado <= "0100110";
-				when LOAD_exec_imm_B4 => estado <= "0100111";
-				when LOAD_exec_imm_B5 => estado <= "0101000";
-				when LOAD_exec_imm_B6 => estado <= "0101001";
-				when LOAD_exec_imm_R1 => estado <= "0101010";
-				when LOAD_exec_imm_R2 => estado <= "0101011";
-				when LOAD_exec_imm_R3 => estado <= "0101100";
-				when LOAD_exec_imm_R4 => estado <= "0101101";
-				when LOAD_exec_imm_R5 => estado <= "0101110";
-				when LOAD_exec_imm_R6 => estado <= "0101111";
-				when STORE_exec1 => estado <= "0110000";
-				when STORE_exec2 => estado <= "0110001";
-				when STORE_exec_imm_A1 => estado <= "0110010";
-				when STORE_exec_imm_A2 => estado <= "0110011";
-				when STORE_exec_imm_A3 => estado <= "0110100";
-				when STORE_exec_imm_A4 => estado <= "0110101";
-				when STORE_exec_imm_A5 => estado <= "0110110";
-				when STORE_exec_imm_B1 => estado <= "0110111";
-				when STORE_exec_imm_B2 => estado <= "0111000";
-				when STORE_exec_imm_B3 => estado <= "0111001";
-				when STORE_exec_imm_B4 => estado <= "0111010";
-				when STORE_exec_imm_B5 => estado <= "0111011";
-				when STORE_exec_imm_R1 => estado <= "0111100";
-				when STORE_exec_imm_R2 => estado <= "0111101";
-				when STORE_exec_imm_R3 => estado <= "0111110";
-				when STORE_exec_imm_R4 => estado <= "0111111";
-				when STORE_exec_imm_R5 => estado <= "1000000";
-				when MOV_exec_A => estado <= "1000001";
-				when MOV_exec_B => estado <= "1000010";
-				when MOV_exec_R => estado <= "1000011";
-				when MOV_exec_imm_A1 => estado <= "1000100";
-				when MOV_exec_imm_A2 => estado <= "1000101";
-				when MOV_exec_imm_A3 => estado <= "1000110";
-				when MOV_exec_imm_B1 => estado <= "1000111";
-				when MOV_exec_imm_B2 => estado <= "1001000";
-				when MOV_exec_imm_B3 => estado <= "1001001";
-				when MOV_exec_imm_R1 => estado <= "1001010";
-				when MOV_exec_imm_R2 => estado <= "1001011";
-				when MOV_exec_imm_R3 => estado <= "1001100";
-				when in_a => estado <= "1001101";
-				when in_b => estado <= "1001110";
-				when in_r => estado <= "1001111";
-				when out1 => estado <= "1010000";
-				when wait1 => estado <= "1010001";
-				when Pc => estado <= "1010010";
-				when others => estado <= "0000000";
-        end case;
     end process;
 
     process(cur_state)
@@ -529,9 +441,9 @@ begin
 										when "0000"| "0001" | "0010" => next_state <= MOV_exec_A;
 										when "0100"| "0101" | "0110"  => next_state <= MOV_exec_B;
 										when "1000"| "1001" | "1010" => next_state <= MOV_exec_R;
-										when "1100" => next_state <= MOV_exec_imm_A1;
-										when "1101" => next_state <= MOV_exec_imm_B1;
-										when "1110" => next_state <= MOV_exec_imm_R1;
+										when "0011" => next_state <= MOV_exec_imm_A1;
+										when "0111" => next_state <= MOV_exec_imm_B1;
+										when "1011" => next_state <= MOV_exec_imm_R1;
 										when others => next_state <= ini;
 									end case;
 									 
@@ -2642,11 +2554,8 @@ use ieee.numeric_std.all;
 entity processador is
     port(sw: in std_logic_vector(7 downto 0);
         clk: in std_logic;    
-       leds: out std_logic_vector(7 downto 0);
-		    q: out std_logic_vector(13 downto 0); 
-			 p: out std_logic_vector(6 downto 0);
-		    s: out std_logic_vector(6 downto 0);
-			 u: out std_logic_vector(6 downto 0));
+       leds: out std_logic_vector(7 downto 0)
+		  );
 end entity;
 
 architecture vamos_reprovar of processador is
@@ -2686,7 +2595,6 @@ architecture vamos_reprovar of processador is
     component controle
         port(inst: in std_logic_vector(7 downto 0);
               clk: in std_logic;    
-				  estado: out std_logic_vector(6 downto 0);
       control_bus: out std_logic_vector(32 downto 0));
     end component;
 
@@ -2728,13 +2636,6 @@ architecture vamos_reprovar of processador is
         saida: out std_logic_vector(7 downto 0)
 	 );
     end component;
-	 
-	 component display
-	    port(
-            S0,S1,S2,S3: in std_logic;
-    	    P0,P1,P2,P3,P4,P5,P6: out std_logic
-        );
-    end component;
 
     signal PC_out, MEM_address, MEM_data, MEM_out, IR_out, PC_add, jump, jumpeq, jumpgr,
             A_in, B_in, R_in, A_wire, B_wire, R_wire, A_out, B_out, R_out, ULA_inA, ULA_inB, ULA_out,
@@ -2745,7 +2646,6 @@ architecture vamos_reprovar of processador is
     signal out_src, A_src, B_src, R_src, alu_src1, alu_src2, data_src: std_logic_vector(1 downto 0);
     signal add_src, aluop: std_logic_vector(2 downto 0);
 	 signal control_bus: std_logic_vector(32 downto 0);
-	 signal estado: std_logic_vector(6 downto 0);
 begin
 
     mem: Memoria
@@ -2761,7 +2661,6 @@ begin
     port map(
              inst => IR_out,
               clk => clk,    
-				  estado => estado,
       control_bus => control_bus
     );
 
@@ -2992,78 +2891,6 @@ begin
 		  seletor => add_src,
 		  saida => MEM_address
 	 );
-	 
-	 d1: display
-    port map(S0 => R_out(0),
-            S1 => R_out(1),
-            S2 => R_out(2),
-            S3 => R_out(3),
-            P0 => q(0),
-            P1 => q(1),
-            P2 => q(2),
-            P3 => q(3),
-            P4 => q(4),
-            P5 => q(5),
-            P6 => q(6)
-    );
-
-    d2: display
-    port map(S0 => R_out(4),
-            S1 => R_out(5),
-            S2 => R_out(6),
-            S3 => R_out(7),
-            P0 => q(7),
-            P1 => q(8),
-            P2 => q(9),
-            P3 => q(10),
-            P4 => q(11),
-            P5 => q(12),
-            P6 => q(13)
-    );
-	 
-	 d3: display
-    port map(S0 => estado(0),
-            S1 => estado(1),
-            S2 => estado(2),
-            S3 => estado(3),
-            P0 => p(0),
-            P1 => p(1),
-            P2 => p(2),
-            P3 => p(3),
-            P4 => p(4),
-            P5 => p(5),
-            P6 => p(6)
-    );
-	 
-	 
-	 
-	 d4: display
-    port map(S0 => over_out,
-            S1 => sinal_out,
-            S2 => carry_out,
-            S3 => zero_out,
-            P0 => s(0),
-            P1 => s(1),
-            P2 => s(2),
-            P3 => s(3),
-            P4 => s(4),
-            P5 => s(5),
-            P6 => s(6)
-    );
-	 
-	 d5: display
-    port map(S0 => estado(4),
-            S1 => estado(5),
-            S2 => estado(6),
-            S3 => '0',
-            P0 => u(0),
-            P1 => u(1),
-            P2 => u(2),
-            P3 => u(3),
-            P4 => u(4),
-            P5 => u(5),
-            P6 => u(6)
-    );
 	 
     PC_add <= std_logic_vector(unsigned(PC_out)+1);
     jeq_and <= jeq and zero_out;
