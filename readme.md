@@ -277,6 +277,8 @@ No caso do processador, os estados descritos correspondem às fases de execuçã
 * ...
 * Pc: atualização do pc
 
+No processador seguimos o seguinte diagrama de estados: 
+
   ![Diagrama_Estados](https://github.com/user-attachments/assets/5e466e64-24ec-4cef-8eb4-63da017ca367)
 
 
