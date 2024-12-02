@@ -253,9 +253,8 @@ A integração dos componentes de um processador em VHDL é uma etapa crucial pa
 </p>
 
 Para o bom funcionamento do processador, decidimos usar a seguinte arquitetura:
-![null](https://github.com/user-attachments/assets/9efb6f72-fafb-44a1-8fd0-5659a790e3ca)
 
-![Diagrama_Estados](https://github.com/user-attachments/assets/5e466e64-24ec-4cef-8eb4-63da017ca367)
+![null](https://github.com/user-attachments/assets/9efb6f72-fafb-44a1-8fd0-5659a790e3ca)
 
 
 ### Estados
@@ -268,6 +267,9 @@ Para o bom funcionamento do processador, decidimos usar a seguinte arquitetura:
 * Not: execução da instrução not
 * ...
 * Pc: atualização do pc
+
+  ![Diagrama_Estados](https://github.com/user-attachments/assets/5e466e64-24ec-4cef-8eb4-63da017ca367)
+
 
 | Estado | rst | load_pc | mem_read | mem_write | mem_en | mem_src1 | mem_src2 | load_ir | A_src | B_src | in_en | load_A | load_B | alu_src1 | alu_src2 | aluop | R_src | load_R | load_overflow | load_sinal | load_zero | load_carry | out_src | load_out | jmp | jeq | jgr 
 |  :--:  |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
