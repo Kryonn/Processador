@@ -1,6 +1,4 @@
-# Prática em Sistemas Digitais - SSC0108
-
-## Projeto final
+# Prática em Sistemas Digitais - SSC0108 - Projeto final
 
 Este trabalho consiste no desenvolvimento de um processador digital simples, implementado em VHDL. O objetivo principal é criar uma CPU funcional, capaz de realizar operações aritméticas, lógicas, de controle de fluxo e interação com a placa FPGA, utilizando uma arquitetura básica com barramentos e componentes bem definidos.
 
