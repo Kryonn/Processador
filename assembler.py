@@ -178,3 +178,27 @@ WAIT
 
 binary_program = assembly_to_binary(assembly_program)
 generate_mif(binary_program, "program.mif")
+
+
+
+
+
+
+IN A
+IN B
+MOV R 0
+STORE R 255
+MOV R A
+LOOP_START
+SUB R B
+MOV A R
+LOAD R 255
+ADD R 1
+STORE R 255
+MOV R A
+CMP R B
+JGR LOOP_START
+LOAD R 255
+OUT R
+WAIT
+
