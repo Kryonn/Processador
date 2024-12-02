@@ -242,6 +242,27 @@ end behavior;
 
 ### Unidade de controle
 A **Unidade de Controle (UC)** é o componente da CPU responsável por coordenar e gerenciar todas as operações do processador. Ela interpreta as instruções de um programa, controla o fluxo de dados entre a memória, a ULA e os registradores, e garante que as operações sejam executadas na ordem correta. A UC emite sinais de controle para ativar os componentes apropriados e sincroniza as atividades do sistema, garantindo o funcionamento eficiente e ordenado do processamento. Responsável por coordenar as ações do processador.
+
+ ![Diagrama_Estados](https://github.com/user-attachments/assets/5e466e64-24ec-4cef-8eb4-63da017ca367)
+
+
+| Estado | rst | load_pc | mem_write | add_src | data_src | load_ir | A_src | B_src | in_en | load_A | load_B | alu_src1 | alu_src2 | aluop | R_src | load_R | out_src | load_out | load_flag | jmp | jeq | jgr 
+|  :--:  |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+|ini               |1|0|0|101|00|0|00|00|0|0|0|    00   |    00   |   000   |00|0|00|0|0|0|0|0|
+|busca1            |0|0|0|101|00|0|00|00|0|0|0|    00   |    00   |   000   |00|0|00|0|0|0|0|0|
+|busca2            |0|0|0|101|00|1|00|00|0|0|0|    00   |    00   |   000   |00|0|00|0|0|0|0|0|
+|decode            |0|0|0|101|00|0|00|00|0|0|0|    00   |    00   |   000   |00|0|00|0|0|0|0|0|
+|R_exec            |0|0|0|101|00|0|00|00|0|0|0|inst[3-2]|inst[1-0]|inst[6-4]|10|1|00|0|0|0|0|0|
+|R_exec_imm1       |0|1|0|101|00|0|00|00|0|0|0|inst[3-2]|inst[1-0]|inst[6-4]|00|0|00|0|0|0|0|0|
+|R_exec_imm2       |0|0|0|101|00|0|00|00|0|0|0|inst[3-2]|inst[1-0]|inst[6-4]|10|0|00|0|0|0|0|0|
+|R_exec_imm3       |0|0|0|101|00|0|00|00|0|0|0|inst[3-2]|inst[1-0]|inst[6-4]|10|1|00|0|0|0|0|0|
+|CMP_exec          |0|0|0|101|00|0|00|00|0|0|0|inst[3-2]|inst[1-0]|   001   |00|0|00|0|1|0|0|0|
+|CMP_exec_imm1     |0|1|0|101|00|0|00|00|0|0|0|   000   |   000   |   000   |00|0|00|0|0|0|0|0|
+|CMP_exec_imm2     |0|0|0|101|00|0|00|00|0|0|0|   000   |   000   |   000   |00|0|00|0|0|0|0|0|
+|CMP_exec_imm3     |0|1|0|101|00|0|00|00|0|0|0|inst[3-2]|inst[1-0]|   001   |00|0|00|0|1|0|0|0|
+|CMP_exec_imm3     |0|1|0|101|00|0|00|00|0|0|0|inst[3-2]|inst[1-0]|   001   |00|0|00|0|1|0|0|0|
+
+Código:
 ```VHDL
 	library ieee;
 use ieee.std_logic_1164.all;
