@@ -115,7 +115,9 @@ end behavior;
 ```
 
 ### Memória
-A **memória** de um computador é o componente responsável por armazenar dados e instruções que serão processados pela CPU. Ela pode ser dividida em níveis, como memória principal (RAM), usada para acesso rápido e temporário durante a execução de programas, e armazenamento secundário (HD ou SSD), que guarda informações de forma permanente. A memória fornece os dados que o processador necessita para realizar operações, sendo essencial para o funcionamento do sistema, pois conecta o armazenamento mais lento ao processamento rápido, garantindo acesso eficiente às informações. O processador possui apenas uma memória(RAM).
+A memória de um computador é responsável por armazenar dados e instruções que serão processados pela CPU, desempenhando um papel essencial no funcionamento do sistema. Ela pode ser dividida em diferentes níveis, como a memória principal (RAM), utilizada para acesso rápido e temporário durante a execução de programas, e o armazenamento secundário (HD ou SSD), que guarda informações de forma permanente. A memória principal conecta o armazenamento mais lento ao processamento rápido, garantindo que o processador tenha acesso eficiente às informações necessárias para realizar suas operações.
+
+No processador em construção, há apenas uma memória principal (RAM), que foi subdividida em duas partes: uma metade é destinada a armazenar as instruções, enquanto a outra é utilizada para guardar os dados necessários durante a execução das operações. Essa organização permite uma separação lógica entre o armazenamento de instruções e dados, contribuindo para um funcionamento mais eficiente.
 
 #### Memória 256x8
 ```VHDL
@@ -258,29 +260,7 @@ Para o bom funcionamento do processador, decidimos usar a seguinte arquitetura:
 ![Diagrama_Estados](https://github.com/user-attachments/assets/5e466e64-24ec-4cef-8eb4-63da017ca367)
 
 
-Códigos da instruções
-
-|Opcode|Instrução|
-|:--:|:--:|
-|0000|ADD|
-|0001|SUB|
-|0010|AND|
-|0011|OR|
-|0100|NOT|
-|0101|CMP|
-|0110|JMP|
-|0111|JEQ|
-|1000|JGR|
-|1001|LOAD|
-|1010|STORE|
-|1011|MOV|
-|1100|IN|
-|1101|OUT|
-|1110|WAIT|
-
-
-
-Estados
+### Estados
 
 * Ini: zera os registradores
 * Busca: leitura da memória e escrita no IR
