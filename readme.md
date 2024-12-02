@@ -324,32 +324,6 @@ No processador seguimos o seguinte diagrama de estados:
 |Pc                |0|1|0|0|1|000|00|0|00|00|0|0|0|    00     |    00     |    000    |00|0|0|0|0|0|00|0|0|0|0|
 
 
-### Sinais de controle
-```VHDL
-rst <= '0'
-load_pc <= '0'
-mem_read <= '0'
-mem_write <= '0'
-add_src <= "000"
-data_src <= "00"
-load_ir <= '0'
-A_src <= "00"
-B_src <= "00"
-in_en <= '0'
-load_A <= '0'
-load_B <= '0'
-alu_src1 <= "00"
-alu_src2 <= "00"
-aluop <= "000"
-R_src <= "00"
-load_r <= '0'
-out_src <= "00"
-load_out <= '0'
-load_flag <= '0'
-jmp <= '0'
-jeq <= '0'
-jgr <= '0'
-```
 ### Código principal:
 ```vhdl
 library ieee;
@@ -2679,6 +2653,8 @@ begin
 
 end be;
 ```
+
+*********************************************** jubilar depois *******************************************************
 
 ### ULA
 ```VHDL
