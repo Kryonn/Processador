@@ -2563,7 +2563,7 @@ A integração dos componentes de um processador em VHDL é uma etapa crucial pa
 
 Para o bom funcionamento do processador, decidimos usar a seguinte arquitetura:
 
-![null](https://github.com/user-attachments/assets/9efb6f72-fafb-44a1-8fd0-5659a790e3ca)
+![backup processador sinais](https://github.com/user-attachments/assets/3f945cd0-0c6e-4898-b6c6-2eeb40c2e052)
 
 
 ### Código principal:
@@ -2917,7 +2917,7 @@ begin
 	 
     PC_add <= std_logic_vector(unsigned(PC_out)+1);
     jeq_and <= jeq and zero_out;
-    jgr_and <= jgr and (not (A_out(7) xor sinal_out)) and (not zero_out);
+    jgr_and <= jgr and not sinal_out;
 
 
     leds <= out_out;
