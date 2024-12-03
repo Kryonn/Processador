@@ -100,7 +100,6 @@ def assembly_to_binary(assembly_code):
             elif instruction in ["JMP", "JEQ", "JGR"]:
     
                 addr_decimal = labels.get(parts[1], 0)
-                print(addr_decimal)
                 offset_correction = count_immediate_instructions(lines, parts[1])  # Conta até o jump
                 addr_decimal += offset_correction   # Adiciona o offset de saltos e o endereço atual
 
@@ -118,7 +117,6 @@ def assembly_to_binary(assembly_code):
                     reg2 = register_set.get(parts[2], "00")  
                     binary_line = f"{opcode}{reg1}{reg2}"
                     binary_code[line_counter] = f"{binary_line}; -- {line}"
-                    line_counter += 1
                 else:
                     addr = int(parts[2], 16) if not parts[2].isdigit() else int(parts[2])
                     addr_bin = format(addr, '08b')  
@@ -163,6 +161,7 @@ def generate_mif(binary_code, file_name="program.mif"):
         for address, binary_line in binary_code.items():
             hex_address = format(address, 'X').upper()
             mif_file.write(f" {hex_address} : {binary_line}\n")
+
 
         mif_file.write("END;\n")
     print(f"Arquivo .mif gerado: {file_name}")
