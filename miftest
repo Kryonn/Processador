@@ -255,6 +255,9 @@ BEGIN
 6 : 01010110; -- CMP B cmp R  b=r
 7 : 10000000; -- JGR imm
 8 : 00000000; -- imm = 0
+3 : 01010100; -- CMP B cmp A  b<a
+4 : 10000000; -- JGR imm
+5 : 00000000; -- imm = 0
 
 
 END;
