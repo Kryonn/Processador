@@ -1,0 +1,41 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity mux6x1 is
+    port(
+        entrada1: in std_logic(7 downto 0);
+        entrada2: in std_logic(7 downto 0);
+        entrada3: in std_logic(7 downto 0);
+        entrada4: in std_logic(7 downto 0);
+        entrada5: in std_logic(7 downto 0);
+        entrada6: in std_logic(7 downto 0);
+        seletor: in std_logic(3 downto 0);
+        saida: out std_logic(7 downto 0)
+    );
+end mux6x1;
+
+architecture behavior of mux6x1 is
+
+begin
+
+	process
+	begin
+		case(seletor) is
+			when "000" =>
+				saida <= entrada1;
+			when "001" =>
+				saida <= entrada1;
+			when "010" =>
+				saida <= entrada1;
+			when "011" =>
+				saida <= entrada1;
+			when "100" =>
+				saida <= entrada1;
+			when "101" =>
+				saida <= entrada1;
+			when others =>
+				saida <= "00000000";
+		end case;
+	end process
+
+end mux6x1;

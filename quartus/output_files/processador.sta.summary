@@ -1,0 +1,213 @@
+------------------------------------------------------------
+Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow 1100mV 85C Model Setup 'controle:uc|cur_state.R_exec'
+Slack : -14.882
+TNS   : -115.555
+
+Type  : Slow 1100mV 85C Model Setup 'clk'
+Slack : -13.723
+TNS   : -472.439
+
+Type  : Slow 1100mV 85C Model Setup 'controle:uc|cur_state.CMP_exec'
+Slack : -5.418
+TNS   : -9.123
+
+Type  : Slow 1100mV 85C Model Hold 'clk'
+Slack : -3.092
+TNS   : -20.449
+
+Type  : Slow 1100mV 85C Model Hold 'controle:uc|cur_state.R_exec'
+Slack : 0.901
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'controle:uc|cur_state.CMP_exec'
+Slack : 2.075
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Recovery 'controle:uc|cur_state.CMP_exec'
+Slack : -9.256
+TNS   : -16.995
+
+Type  : Slow 1100mV 85C Model Recovery 'clk'
+Slack : -0.991
+TNS   : -40.562
+
+Type  : Slow 1100mV 85C Model Removal 'clk'
+Slack : 1.023
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Removal 'controle:uc|cur_state.CMP_exec'
+Slack : 4.358
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'clk'
+Slack : -2.636
+TNS   : -209.698
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'controle:uc|cur_state.R_exec'
+Slack : 0.250
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'controle:uc|cur_state.CMP_exec'
+Slack : 0.291
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Setup 'controle:uc|cur_state.R_exec'
+Slack : -14.642
+TNS   : -114.273
+
+Type  : Slow 1100mV 0C Model Setup 'clk'
+Slack : -13.171
+TNS   : -460.875
+
+Type  : Slow 1100mV 0C Model Setup 'controle:uc|cur_state.CMP_exec'
+Slack : -5.445
+TNS   : -9.172
+
+Type  : Slow 1100mV 0C Model Hold 'clk'
+Slack : -3.202
+TNS   : -22.860
+
+Type  : Slow 1100mV 0C Model Hold 'controle:uc|cur_state.R_exec'
+Slack : 0.823
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'controle:uc|cur_state.CMP_exec'
+Slack : 2.008
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Recovery 'controle:uc|cur_state.CMP_exec'
+Slack : -9.226
+TNS   : -16.998
+
+Type  : Slow 1100mV 0C Model Recovery 'clk'
+Slack : -0.934
+TNS   : -37.399
+
+Type  : Slow 1100mV 0C Model Removal 'clk'
+Slack : 0.959
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Removal 'controle:uc|cur_state.CMP_exec'
+Slack : 4.308
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'clk'
+Slack : -2.636
+TNS   : -197.264
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'controle:uc|cur_state.R_exec'
+Slack : 0.212
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'controle:uc|cur_state.CMP_exec'
+Slack : 0.223
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Setup 'clk'
+Slack : -7.918
+TNS   : -193.761
+
+Type  : Fast 1100mV 85C Model Setup 'controle:uc|cur_state.R_exec'
+Slack : -7.176
+TNS   : -54.872
+
+Type  : Fast 1100mV 85C Model Setup 'controle:uc|cur_state.CMP_exec'
+Slack : -2.571
+TNS   : -4.120
+
+Type  : Fast 1100mV 85C Model Hold 'clk'
+Slack : -1.445
+TNS   : -6.634
+
+Type  : Fast 1100mV 85C Model Hold 'controle:uc|cur_state.R_exec'
+Slack : 0.356
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'controle:uc|cur_state.CMP_exec'
+Slack : 1.395
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Recovery 'controle:uc|cur_state.CMP_exec'
+Slack : -4.412
+TNS   : -7.940
+
+Type  : Fast 1100mV 85C Model Recovery 'clk'
+Slack : 0.014
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Removal 'clk'
+Slack : 0.478
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Removal 'controle:uc|cur_state.CMP_exec'
+Slack : 2.647
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'clk'
+Slack : -2.174
+TNS   : -106.418
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'controle:uc|cur_state.CMP_exec'
+Slack : 0.312
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'controle:uc|cur_state.R_exec'
+Slack : 0.352
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Setup 'clk'
+Slack : -6.840
+TNS   : -160.059
+
+Type  : Fast 1100mV 0C Model Setup 'controle:uc|cur_state.R_exec'
+Slack : -6.591
+TNS   : -50.704
+
+Type  : Fast 1100mV 0C Model Setup 'controle:uc|cur_state.CMP_exec'
+Slack : -2.287
+TNS   : -3.661
+
+Type  : Fast 1100mV 0C Model Hold 'clk'
+Slack : -1.586
+TNS   : -9.776
+
+Type  : Fast 1100mV 0C Model Hold 'controle:uc|cur_state.R_exec'
+Slack : 0.288
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'controle:uc|cur_state.CMP_exec'
+Slack : 1.303
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Recovery 'controle:uc|cur_state.CMP_exec'
+Slack : -4.221
+TNS   : -7.656
+
+Type  : Fast 1100mV 0C Model Recovery 'clk'
+Slack : 0.093
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Removal 'clk'
+Slack : 0.426
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Removal 'controle:uc|cur_state.CMP_exec'
+Slack : 2.588
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'clk'
+Slack : -2.174
+TNS   : -101.746
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'controle:uc|cur_state.CMP_exec'
+Slack : 0.327
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'controle:uc|cur_state.R_exec'
+Slack : 0.369
+TNS   : 0.000
+
+------------------------------------------------------------
