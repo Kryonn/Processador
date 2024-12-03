@@ -18,6 +18,7 @@ LOAD R 255
 OUT R
 WAIT
 
+
 DEPTH = 256;
 WIDTH = 8;
 ADDRESS_RADIX = HEX;
@@ -77,3 +78,46 @@ ADD R 1
 CMP R 26
 JGR DISPLAY_LOOP
 WAIT
+
+
+DEPTH = 256;
+WIDTH = 8;
+ADDRESS_RADIX = HEX;
+DATA_RADIX = BIN;
+CONTENT
+BEGIN
+ 0 : 10110011; -- MOV A 0
+ 1 : 00000000; -- imediato (0)
+ 2 : 10110111; -- MOV B 1
+ 3 : 00000001; -- imediato (1)
+ 4 : 10111011; -- MOV R 16
+ 5 : 00010000; -- imediato (10)
+ 6 : 10100010; -- STORE A R
+ 7 : 00001011; -- ADD R 1
+ 8 : 00000001; -- imediato (1)
+ 9 : 10100110; -- STORE B R
+ A : 10111011; -- MOV R 18
+ B : 00010010; -- imediato (12)
+ C : 00000001; -- ADD A B
+ D : 10101010; -- STORE R R
+ E : 10110001; -- MOV A B
+ F : 10110110; -- MOV B R
+ 10 : 00001011; -- ADD R 1
+ 11 : 00000001; -- imediato (1)
+ 12 : 01011011; -- CMP R 26
+ 13 : 00011010; -- imediato (1A)
+ 14 : 10000000; -- JGR LOOP_START
+ 15 : 00001100; -- endereço (C)
+ 16 : 10111011; -- MOV R 16
+ 17 : 00010000; -- imediato (10)
+ 18 : 10010010; -- LOAD A R
+ 19 : 11010000; -- OUT A
+ 1A : 00001011; -- ADD R 1
+ 1B : 00000001; -- imediato (1)
+ 1C : 01011011; -- CMP R 26
+ 1D : 00011010; -- imediato (1A)
+ 1E : 10000000; -- JGR DISPLAY_LOOP
+ 1F : 00011000; -- endereço (18)
+ 20 : 11100000; -- WAIT
+END;
+
