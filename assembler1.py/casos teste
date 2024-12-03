@@ -18,6 +18,39 @@ LOAD R 255
 OUT R
 WAIT
 
+DEPTH = 256;
+WIDTH = 8;
+ADDRESS_RADIX = HEX;
+DATA_RADIX = BIN;
+CONTENT
+BEGIN
+ 0 : 11000000; -- IN A
+ 1 : 11000100; -- IN B
+ 2 : 10111011; -- MOV R 0
+ 3 : 00000000; -- imediato (0)
+ 4 : 10101011; -- STORE R 255
+ 5 : 11111111; -- endereço (FF)
+ 6 : 10111000; -- MOV R A
+ 7 : 00011001; -- SUB R B
+ 8 : 10110010; -- MOV A R
+ 9 : 10011011; -- LOAD R 255
+ A : 11111111; -- endereço (FF)
+ B : 00001011; -- ADD R 1
+ C : 00000001; -- imediato (1)
+ D : 10101011; -- STORE R 255
+ E : 11111111; -- endereço (FF)
+ F : 10111000; -- MOV R A
+ 10 : 01011001; -- CMP R B
+ 11 : 10000000; -- JGR LOOP_START
+ 12 : 00000111; -- endereço (7)
+ 13 : 10011011; -- LOAD R 255
+ 14 : 11111111; -- endereço (FF)
+ 15 : 11011000; -- OUT R
+ 16 : 11100000; -- WAIT
+END;
+
+
+
 FIBONACCI
 
 MOV A 0
