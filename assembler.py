@@ -17,7 +17,6 @@ def count_immediate_instructions(lines, jump_line):
     for line in lines:
         parts = [p.strip() for p in re.split(r'[,\s]+', line.strip())]
         if parts and parts[0].upper() in immediate_instructions:
-            # Se a linha tiver um imediato e não for após o jum
             if len(parts) > 2 and parts[2].isdigit():
                 count += 1
 
@@ -65,6 +64,7 @@ def assembly_to_binary(assembly_code):
             continue
 
         opcode = instruction_set[instruction]
+    
         try:
             if instruction == "IN":
                 reg1 = register_set.get(parts[1], "00")
@@ -98,7 +98,9 @@ def assembly_to_binary(assembly_code):
                     binary_code[line_counter] = f"{binary_line}; -- {line}"
 
             elif instruction in ["JMP", "JEQ", "JGR"]:
+    
                 addr_decimal = labels.get(parts[1], 0)
+                print(addr_decimal)
                 offset_correction = count_immediate_instructions(lines, parts[1])  # Conta até o jump
                 addr_decimal += offset_correction   # Adiciona o offset de saltos e o endereço atual
 
@@ -108,15 +110,23 @@ def assembly_to_binary(assembly_code):
                 binary_code[line_counter] = f"{binary_line}; -- {line}"
                 line_counter += 1
                 binary_code[line_counter] = f"{addr_bin}; -- endereço ({addr_hex})"
-
+                
             elif instruction in ["STORE", "LOAD"]:
-                reg1 = register_set.get(parts[1], "00")
-                addr = int(parts[2], 16) if not parts[2].isdigit() else int(parts[2])
-                addr_bin = format(addr, '08b')
-                binary_line = f"{opcode}{reg1}11"
-                binary_code[line_counter] = f"{binary_line}; -- {line}"
-                line_counter += 1
-                binary_code[line_counter] = f"{addr_bin}; -- endereço ({addr:X})"
+                reg1 = register_set.get(parts[1], "00")  
+                
+                if parts[2] in register_set:  
+                    reg2 = register_set.get(parts[2], "00")  
+                    binary_line = f"{opcode}{reg1}{reg2}"
+                    binary_code[line_counter] = f"{binary_line}; -- {line}"
+                    line_counter += 1
+                else:
+                    addr = int(parts[2], 16) if not parts[2].isdigit() else int(parts[2])
+                    addr_bin = format(addr, '08b')  
+                    binary_line = f"{opcode}{reg1}11"  
+                    binary_code[line_counter] = f"{binary_line}; -- {line}"
+                    line_counter += 1
+                    binary_code[line_counter] = f"{addr_bin}; -- endereço ({addr:X})"
+
 
             elif instruction == "OUT":
                 reg1 = register_set.get(parts[1], "00")
@@ -159,46 +169,31 @@ def generate_mif(binary_code, file_name="program.mif"):
 
 # Programa de exemplo
 assembly_program = """
-IN A
-IN B
-MOV R, 0
+MOV A 0
+MOV B 1
+MOV R 16
+STORE A R
+ADD R 1
+STORE B R
+MOV R 18
 LOOP_START:
-CMP B, 0
-JEQ END_LOOP
-ADD R, A
-STORE R, 255
-SUB B, 1
-MOV B, R
-LOAD R, 255
-JMP LOOP_START
+ADD A B
+STORE R R
+MOV A B
+MOV B R
+ADD R 1
+CMP R 26
+JGR LOOP_START
 END_LOOP:
-OUT R
+MOV R 16
+DISPLAY_LOOP:
+LOAD A R
+OUT A
+ADD R 1
+CMP R 26
+JGR DISPLAY_LOOP
 WAIT
 """
 
 binary_program = assembly_to_binary(assembly_program)
 generate_mif(binary_program, "program.mif")
-
-
-
-
-
-
-IN A
-IN B
-MOV R 0
-STORE R 255
-MOV R A
-LOOP_START
-SUB R B
-MOV A R
-LOAD R 255
-ADD R 1
-STORE R 255
-MOV R A
-CMP R B
-JGR LOOP_START
-LOAD R 255
-OUT R
-WAIT
-
