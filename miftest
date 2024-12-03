@@ -232,3 +232,29 @@ BEGIN
 
 
 END;
+
+
+
+## TESTE CMP ##
+
+
+
+DEPTH = 256;
+WIDTH = 8;
+ADDRESS_RADIX = HEX;
+DATA_RADIX = BIN;
+CONTENT
+BEGIN
+
+0 : 11000000 ; -- IN in A     1
+1 : 11000100 ; -- IN in B     2 
+2 : 11001000 ; -- IN in R     2
+3 : 01010001; -- CMP A cmp B  a<b
+6 : 10000000; -- JGR imm
+7 : 00000000; -- imm = 0
+4 : 01010110; -- CMP B cmp R  b=r
+6 : 10000000; -- JGR imm
+7 : 00000000; -- imm = 0
+
+
+END;
