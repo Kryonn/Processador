@@ -23,7 +23,7 @@ END;
 
 
 
-### MULTIPLICAÇÃO
+MULTIPLICAÇÃO
 
 IN A
 IN B
@@ -77,6 +77,7 @@ END;
 
 DIVISÃO
 
+
 IN A
 IN B
 MOV R 0
@@ -94,6 +95,7 @@ JGR LOOP_START
 LOAD R 255
 OUT R
 WAIT
+
 
 
 DEPTH = 256;
@@ -129,6 +131,8 @@ END;
 
 
 
+
+
 FIBONACCI
 
 MOV A 0
@@ -155,6 +159,8 @@ ADD R 1
 CMP R 26
 JGR DISPLAY_LOOP
 WAIT
+
+
 
 
 DEPTH = 256;
